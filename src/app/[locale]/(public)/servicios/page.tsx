@@ -1,7 +1,7 @@
 import { unstable_setRequestLocale, getTranslations } from 'next-intl/server';
 import { loadHomeServices } from '@/features/public-home/lib/load-home-services';
 import { HomeServicesGrid } from '@/features/public-home/components/home-services-grid';
-import { JoinCta } from '@/shared/components/marketing/join-cta';
+import { CtaBanner } from '@/shared/components/marketing/cta-banner';
 import { LocatorSelect } from '@/shared/components/marketing/locator-select';
 import { SuggestionCtaCard } from '@/features/service-suggestions';
 import {
@@ -136,7 +136,7 @@ export default async function ServicesPage({
         </div>
       </div>
 
-      <JoinCta
+      <CtaBanner
         title={t('cta.title')}
         buttons={[
           {

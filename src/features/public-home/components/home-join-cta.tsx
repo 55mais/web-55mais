@@ -1,11 +1,11 @@
 import { getTranslations } from 'next-intl/server';
-import { JoinCta } from '@/shared/components/marketing/join-cta';
+import { CtaBanner } from '@/shared/components/marketing/cta-banner';
 
 export async function HomeJoinCta() {
   const t = await getTranslations('home.joinCta');
 
   return (
-    <JoinCta
+    <CtaBanner
       title={t('title')}
       buttons={[
         { label: t('ctaPrimary'), href: '/contratar', variant: 'mustard' },
