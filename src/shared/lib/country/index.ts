@@ -3,6 +3,5 @@
 // imported from those modules directly. Splitting them prevents
 // next/headers from leaking into client bundles.
 
-export { LOCATOR_CITIES, DEFAULT_CITY_SLUG, findCityBySlug } from './cities';
-export type { LocatorCity } from './cities';
+export type { SelectedCity, LocatorCityOption } from './select-city';
 export type { DomainCountry } from './domain';

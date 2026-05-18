@@ -16,9 +16,12 @@ type Props = {
 // Public site layout (RSC). Every page under (public) renders inside the
 // shared shell: Header + Navbar above, Newsletter + Footer + WhatsApp FAB
 // below. font-mulish applied here so admin keeps font-sans.
-export default function PublicLayout({ children, params: { locale } }: Props) {
+export default async function PublicLayout({
+  children,
+  params: { locale },
+}: Props) {
   unstable_setRequestLocale(locale);
-  const currentCity = getSelectedCity();
+  const currentCity = await getSelectedCity(locale);
 
   return (
     <div className="overflow-x-clip font-mulish text-brand-text">
@@ -28,7 +31,7 @@ export default function PublicLayout({ children, params: { locale } }: Props) {
           the parent uses overflow-x-clip (not -hidden) so position:
           sticky still resolves against the viewport. */}
       <div className="sticky top-0 z-50">
-        <PublicHeader currentCity={currentCity} />
+        <PublicHeader currentCity={currentCity} locale={locale} />
         <PublicNavbar />
       </div>
       <main>{children}</main>

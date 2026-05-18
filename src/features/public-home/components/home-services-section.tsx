@@ -1,8 +1,10 @@
 import { getTranslations } from 'next-intl/server';
 import type { ServiceCategory } from '@/shared/lib/services/types';
 import { LocatorSelect } from '@/shared/components/marketing/locator-select';
-import { LOCATOR_CITIES } from '@/shared/lib/country';
-import { getSelectedCity } from '@/shared/lib/country/cookie-server';
+import {
+  getSelectedCity,
+  listCitiesForCountry,
+} from '@/shared/lib/country/cookie-server';
 import { loadHomeServices } from '../lib/load-home-services';
 import { HomeServicesGrid } from './home-services-grid';
 
@@ -22,7 +24,10 @@ export async function HomeServicesSection({ activeCategory, locale }: Props) {
     getTranslations('nav'),
     loadHomeServices(locale, 'all'),
   ]);
-  const city = getSelectedCity();
+  const city = await getSelectedCity(locale);
+  const locatorCities = city
+    ? await listCitiesForCountry(city.countryId, locale)
+    : [];
 
   return (
     <section id="services" className="bg-white px-4 py-12 md:px-6 md:py-16">
@@ -31,17 +36,19 @@ export async function HomeServicesSection({ activeCategory, locale }: Props) {
           {t('sectionTitle')}
         </h2>
 
-        <div className="mb-5 flex max-w-[460px] flex-col gap-1">
-          <p className="text-sm font-medium text-brand-text">
-            {tNav('chooseLocation')}
-          </p>
-          <LocatorSelect
-            cities={LOCATOR_CITIES}
-            currentSlug={city.slug}
-            searchLabel={tNav('search')}
-            searchAriaLabel={tNav('searchAria')}
-          />
-        </div>
+        {city && (
+          <div className="mb-5 flex max-w-[460px] flex-col gap-1">
+            <p className="text-sm font-medium text-brand-text">
+              {tNav('chooseLocation')}
+            </p>
+            <LocatorSelect
+              cities={locatorCities}
+              currentCityId={city.id}
+              searchLabel={tNav('search')}
+              searchAriaLabel={tNav('searchAria')}
+            />
+          </div>
+        )}
 
         <HomeServicesGrid
           services={services}

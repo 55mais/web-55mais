@@ -3,11 +3,11 @@
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { writeLocationCookieClient } from '@/shared/lib/country/cookie-client';
-import type { LocatorCity } from '@/shared/lib/country';
+import type { LocatorCityOption } from '@/shared/lib/country';
 
 type Props = {
-  cities: ReadonlyArray<LocatorCity>;
-  currentSlug: string;
+  cities: ReadonlyArray<LocatorCityOption>;
+  currentCityId: string;
   searchLabel: string;
   searchAriaLabel: string;
 };
@@ -15,12 +15,12 @@ type Props = {
 // Client island for the locator dropdown. Writes the location cookie and
 // triggers a soft refresh so RSCs re-render with the new selection. The
 // surrounding form submit triggers the same refresh on the Busca CTA.
-export function LocatorSelect({ cities, currentSlug, searchLabel, searchAriaLabel }: Props) {
+export function LocatorSelect({ cities, currentCityId, searchLabel, searchAriaLabel }: Props) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  const applyCity = (slug: string) => {
-    writeLocationCookieClient(slug);
+  const applyCity = (cityId: string) => {
+    writeLocationCookieClient(cityId);
     startTransition(() => router.refresh());
   };
 
@@ -31,15 +31,15 @@ export function LocatorSelect({ cities, currentSlug, searchLabel, searchAriaLabe
         // Submit re-emits the refresh; useful when the user picks a value
         // and then hits Enter rather than clicking the option directly.
         const formData = new FormData(e.currentTarget);
-        const slug = String(formData.get('city') ?? currentSlug);
-        applyCity(slug);
+        const cityId = String(formData.get('city') ?? currentCityId);
+        applyCity(cityId);
       }}
       className="flex items-center gap-2.5 w-full"
       role="search"
     >
       <select
         name="city"
-        defaultValue={currentSlug}
+        defaultValue={currentCityId}
         onChange={(e) => applyCity(e.target.value)}
         disabled={isPending}
         aria-label={searchAriaLabel}
@@ -56,8 +56,8 @@ export function LocatorSelect({ cities, currentSlug, searchLabel, searchAriaLabe
         "
       >
         {cities.map((c) => (
-          <option key={c.slug} value={c.slug}>
-            {c.label}
+          <option key={c.id} value={c.id}>
+            {c.name}
           </option>
         ))}
       </select>

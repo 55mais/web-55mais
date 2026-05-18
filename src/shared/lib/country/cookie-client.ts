@@ -5,11 +5,12 @@ export const LOCATION_COOKIE = '55mas_location';
 const ONE_YEAR_SECONDS = 60 * 60 * 24 * 365;
 
 /**
- * Write the selected city slug to the location cookie. Server reads it via
- * `getSelectedCity()` on the next request, so the caller should follow with
- * `router.refresh()` to trigger a fresh RSC render.
+ * Write the selected city id (cities.id uuid) to the location cookie.
+ * Server reads it via `getSelectedCity()` on the next request, so the
+ * caller should follow with `router.refresh()` to trigger a fresh RSC
+ * render.
  */
-export function writeLocationCookieClient(slug: string): void {
+export function writeLocationCookieClient(cityId: string): void {
   if (typeof document === 'undefined') return;
-  document.cookie = `${LOCATION_COOKIE}=${encodeURIComponent(slug)};path=/;max-age=${ONE_YEAR_SECONDS};SameSite=Lax`;
+  document.cookie = `${LOCATION_COOKIE}=${encodeURIComponent(cityId)};path=/;max-age=${ONE_YEAR_SECONDS};SameSite=Lax`;
 }

@@ -1,21 +1,27 @@
 import Image from 'next/image';
 import { Link } from '@/lib/i18n/navigation';
 import { getTranslations } from 'next-intl/server';
-import { LOCATOR_CITIES, type LocatorCity } from '@/shared/lib/country';
+import type { SelectedCity } from '@/shared/lib/country';
+import { listCitiesForCountry } from '@/shared/lib/country/cookie-server';
 import { MobileMenu } from '../mobile-menu';
 import { LangSwitcher } from '../lang-switcher';
 import { SocialsRow } from './socials-row';
 import { LocatorSelect } from '@/shared/components/marketing/locator-select';
 
 type Props = {
-  currentCity: LocatorCity;
+  currentCity: SelectedCity | null;
+  locale: string;
 };
 
 // Public header (RSC). Sticky white bar with logo + city locator + socials
 // + lang switcher + Iniciar sesión. The locator-select is a Client island;
-// everything else is server-rendered (zero JS shipped).
-export async function PublicHeader({ currentCity }: Props) {
+// everything else is server-rendered (zero JS shipped). When no city can
+// be resolved (country with no active cities) the locator block is omitted.
+export async function PublicHeader({ currentCity, locale }: Props) {
   const t = await getTranslations('nav');
+  const cities = currentCity
+    ? await listCitiesForCountry(currentCity.countryId, locale)
+    : [];
 
   return (
     <header className="bg-white">
@@ -31,18 +37,21 @@ export async function PublicHeader({ currentCity }: Props) {
           />
         </Link>
 
-        {/* Locator — hidden on mobile (burger menu surfaces it later in fase 1.1+) */}
-        <div className="hidden lg:flex flex-col gap-1 flex-1 max-w-[460px]">
-          <label htmlFor="loc-select" className="text-sm font-medium text-brand-text whitespace-nowrap">
-            {t('chooseLocation')}
-          </label>
-          <LocatorSelect
-            cities={LOCATOR_CITIES}
-            currentSlug={currentCity.slug}
-            searchLabel={t('search')}
-            searchAriaLabel={t('searchAria')}
-          />
-        </div>
+        {/* Locator — hidden on mobile (burger menu surfaces it later in
+            fase 1.1+). Omitted entirely when no city resolves. */}
+        {currentCity && (
+          <div className="hidden lg:flex flex-col gap-1 flex-1 max-w-[460px]">
+            <label htmlFor="loc-select" className="text-sm font-medium text-brand-text whitespace-nowrap">
+              {t('chooseLocation')}
+            </label>
+            <LocatorSelect
+              cities={cities}
+              currentCityId={currentCity.id}
+              searchLabel={t('search')}
+              searchAriaLabel={t('searchAria')}
+            />
+          </div>
+        )}
 
         <div className="hidden lg:flex items-center gap-4 ml-auto">
           <SocialsRow tone="dark" ariaLabel={t('socialsAria')} />

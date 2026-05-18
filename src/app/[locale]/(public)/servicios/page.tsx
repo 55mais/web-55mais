@@ -4,8 +4,10 @@ import { HomeServicesGrid } from '@/features/public-home/components/home-service
 import { JoinCta } from '@/shared/components/marketing/join-cta';
 import { LocatorSelect } from '@/shared/components/marketing/locator-select';
 import { SuggestionCtaCard } from '@/features/service-suggestions';
-import { LOCATOR_CITIES } from '@/shared/lib/country';
-import { getSelectedCity } from '@/shared/lib/country/cookie-server';
+import {
+  getSelectedCity,
+  listCitiesForCountry,
+} from '@/shared/lib/country/cookie-server';
 import { listActiveCountries } from '@/shared/lib/countries/list-active-countries';
 import { listActiveCities } from '@/shared/lib/countries/list-active-cities';
 import {
@@ -53,7 +55,10 @@ export default async function ServicesPage({
   unstable_setRequestLocale(locale);
   const activeCategory = normalizeCategory(searchParams.cat);
   const initialQuery = normalizeQuery(searchParams.q);
-  const city = getSelectedCity();
+  const city = await getSelectedCity(locale);
+  const locatorCities = city
+    ? await listCitiesForCountry(city.countryId, locale)
+    : [];
 
   const [t, tNav, services, countries, cities] = await Promise.all([
     getTranslations('services'),
@@ -104,17 +109,19 @@ export default async function ServicesPage({
             showSearch
             initialQuery={initialQuery}
             controlsSlot={
-              <div className="flex max-w-[460px] flex-col gap-1">
-                <p className="text-sm font-medium text-brand-text">
-                  {tNav('chooseLocation')}
-                </p>
-                <LocatorSelect
-                  cities={LOCATOR_CITIES}
-                  currentSlug={city.slug}
-                  searchLabel={tNav('search')}
-                  searchAriaLabel={tNav('searchAria')}
-                />
-              </div>
+              city ? (
+                <div className="flex max-w-[460px] flex-col gap-1">
+                  <p className="text-sm font-medium text-brand-text">
+                    {tNav('chooseLocation')}
+                  </p>
+                  <LocatorSelect
+                    cities={locatorCities}
+                    currentCityId={city.id}
+                    searchLabel={tNav('search')}
+                    searchAriaLabel={tNav('searchAria')}
+                  />
+                </div>
+              ) : undefined
             }
             gridCtaSlot={
               <SuggestionCtaCard
