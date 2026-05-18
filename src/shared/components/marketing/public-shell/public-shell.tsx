@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { getTranslations } from 'next-intl/server';
 import { getSelectedCity } from '@/shared/lib/country/cookie-server';
 import { PublicHeader } from '@/shared/components/marketing/header';
 import { PublicNavbar } from '@/shared/components/marketing/navbar';
@@ -24,6 +25,7 @@ export async function PublicShell({
   showNewsletter = true,
 }: Props) {
   const currentCity = await getSelectedCity(locale);
+  const tn = showNewsletter ? await getTranslations('newsletter') : null;
 
   return (
     <div className="overflow-x-clip font-mulish text-brand-text">
@@ -37,7 +39,16 @@ export async function PublicShell({
         <PublicNavbar />
       </div>
       <main>{children}</main>
-      {showNewsletter && <NewsletterForm />}
+      {tn && (
+        <NewsletterForm
+          title={tn('title')}
+          lead={tn('lead')}
+          placeholder={tn('placeholder')}
+          emailLabel={tn('emailLabel')}
+          submitLabel={tn('submit')}
+          formAria={tn('formAria')}
+        />
+      )}
       <PublicFooter />
       <WhatsappFab />
     </div>

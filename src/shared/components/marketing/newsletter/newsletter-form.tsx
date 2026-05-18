@@ -1,33 +1,48 @@
-import { getTranslations } from 'next-intl/server';
+export type NewsletterFormProps = {
+  title: string;
+  lead: string;
+  placeholder: string;
+  emailLabel: string;
+  submitLabel: string;
+  formAria: string;
+  /** Band background/padding. Defaults to the mustard hero band. */
+  className?: string;
+};
 
 // Newsletter form (visual only in fase 1.2). Fase 5.2 will wire it to a
 // real Server Action with Zod validation, rate limiting, honeypot, and
 // the email provider integration the client decides on.
-export async function NewsletterForm() {
-  const t = await getTranslations('newsletter');
-
+export function NewsletterForm({
+  title,
+  lead,
+  placeholder,
+  emailLabel,
+  submitLabel,
+  formAria,
+  className,
+}: NewsletterFormProps) {
   return (
-    <section className="bg-brand-mustard py-16 px-4">
+    <section className={className ?? 'bg-brand-mustard py-16 px-4'}>
       <div className="mx-auto max-w-[640px] text-center">
         <h2 className="m-0 mb-2.5 text-2xl font-bold text-brand-text md:text-[1.6rem]">
-          {t('title')}
+          {title}
         </h2>
-        <p className="mb-6 text-brand-text">{t('lead')}</p>
+        <p className="mb-6 text-brand-text">{lead}</p>
         <form
           action="#"
           method="post"
-          aria-label={t('formAria')}
+          aria-label={formAria}
           className="flex flex-col gap-2.5 sm:flex-row"
         >
           <label className="sr-only" htmlFor="newsletter-email">
-            {t('emailLabel')}
+            {emailLabel}
           </label>
           <input
             id="newsletter-email"
             type="email"
             name="email"
             required
-            placeholder={t('placeholder')}
+            placeholder={placeholder}
             className="
               flex-1 rounded-full bg-white px-[18px] py-3
               text-base text-brand-text
@@ -48,7 +63,7 @@ export async function NewsletterForm() {
               transition-colors
             "
           >
-            {t('submit')}
+            {submitLabel}
           </button>
         </form>
       </div>
