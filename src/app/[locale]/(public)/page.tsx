@@ -6,7 +6,7 @@ import { HomeHowtoTalents } from '@/features/public-home/components/home-howto-t
 import { HomeHowtoClients } from '@/features/public-home/components/home-howto-clients';
 import { HomeProject } from '@/features/public-home/components/home-project';
 import { HomeTestimonials } from '@/features/public-home/components/home-testimonials';
-import { HomeJoinCta } from '@/features/public-home/components/home-join-cta';
+import { HomeCtaBanner } from '@/features/public-home/components/home-cta-banner';
 import { HomeCollaborators } from '@/features/public-home/components/home-collaborators';
 
 type Category = 'all' | 'accompaniment' | 'classes' | 'repairs' | 'home';
@@ -51,7 +51,7 @@ export default async function PublicHomePage({ params: { locale }, searchParams 
       <HomeHowtoClients />
       <HomeProject />
       <HomeTestimonials locale={locale} />
-      <HomeJoinCta />
+      <HomeCtaBanner />
       <HomeCollaborators />
     </>
   );

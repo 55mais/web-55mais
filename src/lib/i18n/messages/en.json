@@ -1320,7 +1320,7 @@
       "roleLabel": "Customer",
       "carouselAria": "Testimonials carousel"
     },
-    "joinCta": {
+    "ctaBanner": {
       "title": "Join our community and discover connections that transform lives.",
       "ctaPrimary": "Hire a service",
       "ctaSecondary": "Offer a service"

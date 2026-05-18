@@ -1,8 +1,8 @@
 import { getTranslations } from 'next-intl/server';
 import { CtaBanner } from '@/shared/components/marketing/cta-banner';
 
-export async function HomeJoinCta() {
-  const t = await getTranslations('home.joinCta');
+export async function HomeCtaBanner() {
+  const t = await getTranslations('home.ctaBanner');
 
   return (
     <CtaBanner
