@@ -169,6 +169,8 @@ export async function _loadServiceDetailUncached(
     slug: service.slug,
     name: localized('name') ?? service.slug,
     description: trimToNull(localized('description')),
+    heroTitle: trimToNull(localized('hero_title')),
+    heroSubtitle: trimToNull(localized('hero_subtitle')),
     benefits: localizeArray(i18n, locale, 'benefits'),
     guarantees: localizeArray(i18n, locale, 'guarantees'),
     faqs: mapFaqs(i18n, locale),

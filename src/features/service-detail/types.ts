@@ -18,6 +18,8 @@ export type ServiceDetailView = {
   slug: string;
   name: string; // localized, falls back to slug, never empty
   description: string | null; // shown under H1; also feeds metadata/JSON-LD
+  heroTitle: string | null; // CTA banner title (hero_title)
+  heroSubtitle: string | null; // CTA banner subtitle (hero_subtitle)
   benefits: string[];
   guarantees: string[];
   faqs: ServiceDetailFaq[];

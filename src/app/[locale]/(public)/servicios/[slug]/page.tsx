@@ -4,10 +4,10 @@ import {
   loadServiceDetail,
   ServiceDetailHero,
   ServiceDetailBenefits,
+  ServiceCtaBanner,
 } from '@/features/service-detail';
 import { PublicFaqAccordion } from '@/features/faqs/components/public-faq-accordion';
 import { HomeTestimonials } from '@/features/public-home/components/home-testimonials';
-import { JoinCta } from '@/shared/components/marketing/join-cta';
 import { buildPublicMetadata, JsonLdScript, serviceJsonLd } from '@/shared/lib/seo';
 
 type Props = {
@@ -73,18 +73,16 @@ export default async function ServiceDetailPage({
         />
       )}
 
-      <HomeTestimonials locale={locale} />
+      {svc.heroTitle && (
+        <ServiceCtaBanner
+          title={svc.heroTitle}
+          subtitle={svc.heroSubtitle}
+          hireLabel={t('cta.hire')}
+          offerLabel={t('cta.offer')}
+        />
+      )}
 
-      <JoinCta
-        title={t('cta.joinTitle')}
-        buttons={[
-          {
-            label: t('cta.joinButton'),
-            href: '/registro/talento',
-            variant: 'mustard',
-          },
-        ]}
-      />
+      <HomeTestimonials locale={locale} />
     </>
   );
 }

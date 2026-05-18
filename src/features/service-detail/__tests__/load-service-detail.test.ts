@@ -64,7 +64,7 @@ const ES_I18N = {
   es: {
     name: 'Paseos',
     description: 'desc',
-    includes: 'Acompañamiento',
+    hero_title: 'Reparaciones',
     hero_subtitle: 'Sub',
     benefits: ['b1', 'b2'],
     guarantees: ['g1'],
@@ -91,6 +91,8 @@ describe('_loadServiceDetailUncached', () => {
       slug: 'paseos',
       name: 'Paseos',
       description: 'desc',
+      heroTitle: 'Reparaciones',
+      heroSubtitle: 'Sub',
       benefits: ['b1', 'b2'],
       guarantees: ['g1'],
       faqs: [{ id: 'faq-0', question: 'P', answer: 'R' }],
@@ -190,6 +192,8 @@ describe('_loadServiceDetailUncached', () => {
     expect(v?.guarantees).toEqual([]);
     expect(v?.faqs).toEqual([]);
     expect(v?.description).toBeNull();
+    expect(v?.heroTitle).toBeNull();
+    expect(v?.heroSubtitle).toBeNull();
   });
 
   it('faqs: synthetic ids, drops items with empty question/answer', async () => {

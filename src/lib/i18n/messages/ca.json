@@ -1427,8 +1427,8 @@
     },
     "cta": {
       "reserve": "Reserva ara",
-      "joinTitle": "Tens talent per compartir? Uneix-te com a talent 55+",
-      "joinButton": "Vull oferir un servei"
+      "hire": "Contracta un servei",
+      "offer": "Ofereix un servei"
     }
   },
   "ServiceSuggestion": {

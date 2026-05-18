@@ -1427,8 +1427,8 @@
     },
     "cta": {
       "reserve": "Reservar agora",
-      "joinTitle": "Tem talento para compartilhar? Junte-se como talento 55+",
-      "joinButton": "Quero oferecer um serviço"
+      "hire": "Contrate um serviço",
+      "offer": "Ofereça um serviço"
     }
   },
   "ServiceSuggestion": {
