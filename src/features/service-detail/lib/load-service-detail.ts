@@ -168,14 +168,13 @@ export async function _loadServiceDetailUncached(
     id: service.id,
     slug: service.slug,
     name: localized('name') ?? service.slug,
-    heroSubtitle: trimToNull(localized('hero_subtitle')),
+    description: trimToNull(localized('description')),
     includes: trimToNull(localized('includes')),
     benefits: localizeArray(i18n, locale, 'benefits'),
     guarantees: localizeArray(i18n, locale, 'guarantees'),
     faqs: mapFaqs(i18n, locale),
     coverImageUrl: buildCoverPublicUrl(service.cover_image_url, 'hero'),
     price,
-    metaDescription: localized('description'),
   };
 }
 

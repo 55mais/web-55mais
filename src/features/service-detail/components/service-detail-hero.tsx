@@ -5,7 +5,7 @@ import { ServicePrice } from './service-price';
 
 type Props = {
   name: string;
-  subtitle: string | null;
+  description: string | null;
   price: ServiceDetailPrice | null;
   imageUrl: string | null;
   ctaLabel: string;
@@ -20,7 +20,7 @@ type Props = {
 // disabled) — booking flow is out of scope for this page.
 export function ServiceDetailHero({
   name,
-  subtitle,
+  description,
   price,
   imageUrl,
   ctaLabel,
@@ -35,8 +35,10 @@ export function ServiceDetailHero({
           <h1 className="m-0 mb-3 text-3xl font-bold text-brand-text md:text-[2.6rem]">
             {name}
           </h1>
-          {subtitle && (
-            <p className="mb-6 text-lg text-brand-text/75">{subtitle}</p>
+          {description && (
+            <p className="mb-6 whitespace-pre-line text-lg text-brand-text/75">
+              {description}
+            </p>
           )}
           <div className="mb-6">
             <ServicePrice

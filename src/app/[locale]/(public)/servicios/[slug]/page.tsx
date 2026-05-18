@@ -23,7 +23,7 @@ export async function generateMetadata({ params: { locale, slug } }: Props) {
     locale,
     path: `/servicios/${slug}`,
     title: t('titleTemplate', { name: svc.name }),
-    description: svc.metaDescription ?? t('descriptionFallback'),
+    description: svc.description ?? t('descriptionFallback'),
     ogImage: svc.coverImageUrl ?? undefined,
   });
 }
@@ -39,7 +39,7 @@ export default async function ServiceDetailPage({
 
   const jsonLd = serviceJsonLd({
     name: svc.name,
-    description: svc.metaDescription ?? undefined,
+    description: svc.description ?? undefined,
     url: `/servicios/${svc.slug}`,
     imageUrl: svc.coverImageUrl ?? undefined,
     price: svc.price?.amount,
@@ -52,7 +52,7 @@ export default async function ServiceDetailPage({
 
       <ServiceDetailHero
         name={svc.name}
-        subtitle={svc.heroSubtitle}
+        description={svc.description}
         price={svc.price}
         imageUrl={svc.coverImageUrl}
         ctaLabel={t('cta.reserve')}

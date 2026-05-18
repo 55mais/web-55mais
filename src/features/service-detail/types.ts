@@ -17,12 +17,11 @@ export type ServiceDetailView = {
   id: string;
   slug: string;
   name: string; // localized, falls back to slug, never empty
-  heroSubtitle: string | null;
+  description: string | null; // shown under H1; also feeds metadata/JSON-LD
   includes: string | null;
   benefits: string[];
   guarantees: string[];
   faqs: ServiceDetailFaq[];
   coverImageUrl: string | null; // buildCoverPublicUrl(..., 'hero')
   price: ServiceDetailPrice | null;
-  metaDescription: string | null; // metadata/JSON-LD only — never rendered
 };

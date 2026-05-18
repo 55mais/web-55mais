@@ -90,13 +90,12 @@ describe('_loadServiceDetailUncached', () => {
       id: 's1',
       slug: 'paseos',
       name: 'Paseos',
-      heroSubtitle: 'Sub',
+      description: 'desc',
       includes: 'Acompañamiento',
       benefits: ['b1', 'b2'],
       guarantees: ['g1'],
       faqs: [{ id: 'faq-0', question: 'P', answer: 'R' }],
       price: { amount: 30, currency: 'EUR', source: 'city' },
-      metaDescription: 'desc',
       coverImageUrl: null,
     });
   });
@@ -191,7 +190,7 @@ describe('_loadServiceDetailUncached', () => {
     expect(v?.benefits).toEqual([]);
     expect(v?.guarantees).toEqual([]);
     expect(v?.faqs).toEqual([]);
-    expect(v?.heroSubtitle).toBeNull();
+    expect(v?.description).toBeNull();
     expect(v?.includes).toBeNull();
   });
 
