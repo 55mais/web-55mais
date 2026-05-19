@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // FIFO queue of supabase results, consumed in call order. Both
-// `.maybeSingle()` and awaiting the builder directly (cities query)
+// `.maybeSingle()` and awaiting the builder directly (cities list query)
 // pull the next result.
 const h = vi.hoisted(() => ({
   results: [] as Array<{ data: unknown; error: unknown }>,
@@ -36,6 +36,7 @@ vi.mock('next/headers', () => ({
 import {
   _resolveDomainCountryUncached,
   _listCitiesUncached,
+  _resolveCityByIdUncached,
   _selectCityUncached,
   getSelectedCity,
 } from '../select-city';
@@ -45,6 +46,18 @@ const CITIES = [
   { id: 'c2', slug: 'madrid', i18n: { es: { name: 'Madrid' } } },
   { id: 'c1', slug: 'barcelona', i18n: { es: { name: 'Barcelona' } } },
 ];
+
+// uuid-shaped cookie values (the live cookie carries a real cities.id).
+const PT_CITY_ID = '11111111-1111-4111-8111-111111111111';
+const MISSING_CITY_ID = '22222222-2222-4222-8222-222222222222';
+
+// Row shape of the cookie-first join query (`cities` + `countries!inner`).
+const PT_CITY_JOIN = {
+  id: PT_CITY_ID,
+  slug: 'lisboa',
+  i18n: { es: { name: 'Lisboa' } },
+  countries: { id: 'pt', code: 'PT' },
+};
 
 beforeEach(() => {
   h.results = [];
@@ -112,23 +125,91 @@ describe('_listCitiesUncached', () => {
   });
 });
 
-describe('_selectCityUncached', () => {
-  it('cookie = valid city_id → that city', async () => {
-    h.cookieVal = 'c2';
+describe('_resolveCityByIdUncached', () => {
+  it('active city + active country → SelectedCity from the joined row', async () => {
+    h.results = [{ data: PT_CITY_JOIN, error: null }];
+    expect(await _resolveCityByIdUncached(PT_CITY_ID, 'es')).toEqual({
+      id: PT_CITY_ID,
+      slug: 'lisboa',
+      name: 'Lisboa',
+      countryId: 'pt',
+      countryCode: 'PT',
+    });
+  });
+
+  it('no matching active row → null (inactive city/country or gone)', async () => {
+    h.results = [{ data: null, error: null }];
+    expect(await _resolveCityByIdUncached(MISSING_CITY_ID, 'es')).toBeNull();
+  });
+
+  it('embedded country missing → null (defensive)', async () => {
+    h.results = [
+      { data: { ...PT_CITY_JOIN, countries: null }, error: null },
+    ];
+    expect(await _resolveCityByIdUncached(PT_CITY_ID, 'es')).toBeNull();
+  });
+
+  it('localizes name with fallback to slug', async () => {
+    h.results = [
+      {
+        data: { ...PT_CITY_JOIN, i18n: {} },
+        error: null,
+      },
+    ];
+    expect(await _resolveCityByIdUncached(PT_CITY_ID, 'fr')).toMatchObject({
+      name: 'lisboa',
+    });
+  });
+
+  it('throws when supabase errors', async () => {
+    h.results = [{ data: null, error: { message: 'boom' } }];
+    await expect(
+      _resolveCityByIdUncached(PT_CITY_ID, 'es'),
+    ).rejects.toBeTruthy();
+  });
+});
+
+describe('_selectCityUncached (cookie-first)', () => {
+  it('cookie = uuid of a city in ANOTHER country (PT) on the ES domain → that city wins (1 query, country = PT)', async () => {
+    h.cookieVal = PT_CITY_ID;
+    h.results = [{ data: PT_CITY_JOIN, error: null }];
+    expect(await _selectCityUncached('es')).toEqual({
+      id: PT_CITY_ID,
+      slug: 'lisboa',
+      name: 'Lisboa',
+      countryId: 'pt',
+      countryCode: 'PT',
+    });
+  });
+
+  it('cookie absent → domain country (ES), first alphabetical city', async () => {
     h.results = [
       { data: ES, error: null },
       { data: CITIES, error: null },
     ];
     expect(await _selectCityUncached('es')).toEqual({
-      id: 'c2',
-      slug: 'madrid',
-      name: 'Madrid',
+      id: 'c1',
+      slug: 'barcelona',
+      name: 'Barcelona',
       countryId: 'es',
       countryCode: 'ES',
     });
   });
 
-  it('cookie = legacy slug → bridges to the real city', async () => {
+  it('cookie = uuid that is missing/inactive → degrades to domain path (no throw)', async () => {
+    h.cookieVal = MISSING_CITY_ID;
+    h.results = [
+      { data: null, error: null }, // by-id join: no row
+      { data: ES, error: null }, // domain country
+      { data: CITIES, error: null }, // domain cities
+    ];
+    expect(await _selectCityUncached('es')).toMatchObject({
+      id: 'c1',
+      countryCode: 'ES',
+    });
+  });
+
+  it('cookie = legacy slug → bridges within the domain country only', async () => {
     h.cookieVal = 'barcelona';
     h.results = [
       { data: ES, error: null },
@@ -137,18 +218,11 @@ describe('_selectCityUncached', () => {
     expect(await _selectCityUncached('es')).toMatchObject({
       id: 'c1',
       slug: 'barcelona',
+      countryId: 'es',
     });
   });
 
-  it('cookie absent → first alphabetical city', async () => {
-    h.results = [
-      { data: ES, error: null },
-      { data: CITIES, error: null },
-    ];
-    expect(await _selectCityUncached('es')).toMatchObject({ id: 'c1' });
-  });
-
-  it('cookie = unknown value → fallback first city', async () => {
+  it('cookie = unknown non-uuid value → fallback first city', async () => {
     h.cookieVal = 'does-not-exist';
     h.results = [
       { data: ES, error: null },

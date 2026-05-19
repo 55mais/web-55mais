@@ -38,6 +38,12 @@ type CityRow = LocatorCityOption & { slug: string };
 type DomainCountryRow = { id: string; code: string };
 type I18nRecord = Record<string, Record<string, unknown>> | null;
 
+// The location cookie carries a real `cities.id` (uuid). Old cookies
+// stored a slug ('barcelona'); distinguish the two by shape so the
+// untrusted cookie value never reaches the wrong query path.
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 // --- uncached internals (tested directly to avoid React.cache()
 // memoizing across unit-test cases that share the same args) ---------
 
@@ -90,23 +96,73 @@ export async function _listCitiesUncached(
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
+type CityByIdRow = {
+  id: string;
+  slug: string;
+  i18n: I18nRecord;
+  countries: DomainCountryRow | DomainCountryRow[] | null;
+};
+
+// Cookie-first resolution: a uuid cookie references an exact `cities.id`
+// and carries its own country via the join, so it overrides the domain
+// (a Barcelona cookie on the `.pt` domain stays Barcelona). One
+// round-trip; returns null when the city or its country is inactive/gone
+// so the caller can degrade to the domain path.
+export async function _resolveCityByIdUncached(
+  id: string,
+  locale: string,
+): Promise<SelectedCity | null> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('cities')
+    .select('id, slug, i18n, countries!inner(id, code)')
+    .eq('id', id)
+    .eq('is_active', true)
+    .eq('countries.is_active', true)
+    .limit(1)
+    .maybeSingle();
+  if (error) throw error;
+  if (!data) return null;
+
+  const row = data as CityByIdRow;
+  const country = Array.isArray(row.countries)
+    ? row.countries[0]
+    : row.countries;
+  if (!country) return null;
+
+  return {
+    id: row.id,
+    slug: row.slug,
+    name: localizedField(row.i18n, locale, 'name') ?? row.slug,
+    countryId: country.id,
+    countryCode: country.code,
+  };
+}
+
 export async function _selectCityUncached(
   locale: string,
 ): Promise<SelectedCity | null> {
+  const cookieVal = cookies().get(LOCATION_COOKIE)?.value;
+
+  // 1. uuid cookie → exact city, country from the join (cookie wins
+  //    over domain). Inactive/missing falls through to the domain path.
+  if (cookieVal && UUID_RE.test(cookieVal)) {
+    const byId = await _resolveCityByIdUncached(cookieVal, locale);
+    if (byId) return byId;
+  }
+
   const country = await _resolveDomainCountryUncached();
   if (!country) return null;
 
   const cityRows = await _listCitiesUncached(country.id, locale);
   if (cityRows.length === 0) return null;
 
-  const cookieVal = cookies().get(LOCATION_COOKIE)?.value;
+  // 2. Legacy slug cookie: bridge within the domain country only (no
+  //    global slug lookup → avoids cross-country slug ambiguity).
+  // 3. No/unmatched cookie: first alphabetical city.
   const match =
-    (cookieVal && cityRows.find((c) => c.id === cookieVal)) ||
-    // Legacy bridge: old cookies stored a slug ('barcelona'). Resolve
-    // it to the real city when the domain country has it; otherwise
-    // fall through to the first alphabetical city.
-    (cookieVal && cityRows.find((c) => c.slug === cookieVal)) ||
-    cityRows[0];
+    (cookieVal && cityRows.find((c) => c.slug === cookieVal)) || cityRows[0];
 
   return {
     id: match.id,
