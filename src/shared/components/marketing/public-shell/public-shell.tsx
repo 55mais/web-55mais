@@ -1,6 +1,10 @@
 import type { ReactNode } from 'react';
 import { getTranslations } from 'next-intl/server';
 import { getSelectedCity } from '@/shared/lib/country/cookie-server';
+import { hasGeoAck } from '@/shared/lib/country/geo-ack-server';
+import { listActiveCountries } from '@/shared/lib/countries/list-active-countries';
+import { listActiveCities } from '@/shared/lib/countries/list-active-cities';
+import { LocationModalGate } from '@/shared/components/marketing/location-modal';
 import { PublicHeader } from '@/shared/components/marketing/header';
 import { PublicNavbar } from '@/shared/components/marketing/navbar';
 import { NewsletterForm } from '@/shared/components/marketing/newsletter';
@@ -16,6 +20,46 @@ type Props = {
   showNewsletter?: boolean;
 };
 
+// First-visit gate: rendered only when the ack cookie is absent AND a
+// city is resolvable (no countries/cities → degrade silently, same as
+// the header hiding the locator). Importing the island lazily here
+// keeps its JS off return-visit pages (ack present → null).
+async function buildLocationGate(locale: string) {
+  const currentCity = await getSelectedCity(locale);
+  if (hasGeoAck() || currentCity === null) return null;
+
+  const [countries, cities, tm] = await Promise.all([
+    listActiveCountries(locale),
+    listActiveCities(locale),
+    getTranslations('LocationModal'),
+  ]);
+  const resolvedName =
+    countries.find((c) => c.id === currentCity.countryId)?.name ??
+    currentCity.name;
+
+  return (
+    <LocationModalGate
+      countries={countries}
+      cities={cities}
+      initialCountryId={currentCity.countryId}
+      initialCityId={currentCity.id}
+      currentLocale={locale}
+      labels={{
+        title: tm('title'),
+        description: tm('description'),
+        countryLabel: tm('countryLabel'),
+        cityLabel: tm('cityLabel'),
+        cityPlaceholder: tm('cityPlaceholder'),
+        languageLabel: tm('languageLabel'),
+        confirm: tm('confirm'),
+        skip: tm('skip', { country: resolvedName }),
+        close: tm('close'),
+        dialogAria: tm('dialogAria'),
+      }}
+    />
+  );
+}
+
 // Shared public site shell (RSC): Header + Navbar above, optional
 // Newsletter + Footer + WhatsApp FAB below. font-mulish applied here so
 // admin keeps font-sans.
@@ -26,6 +70,7 @@ export async function PublicShell({
 }: Props) {
   const currentCity = await getSelectedCity(locale);
   const tn = showNewsletter ? await getTranslations('newsletter') : null;
+  const locationGate = await buildLocationGate(locale);
 
   return (
     <div className="overflow-x-clip font-mulish text-brand-text">
@@ -51,6 +96,7 @@ export async function PublicShell({
       )}
       <PublicFooter />
       <WhatsappFab />
+      {locationGate}
     </div>
   );
 }

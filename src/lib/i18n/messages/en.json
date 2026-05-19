@@ -1548,6 +1548,18 @@
     "submit": "Subscribe",
     "formAria": "Newsletter signup"
   },
+  "LocationModal": {
+    "title": "Where are you?",
+    "description": "Choose your country, city and language to see the services and prices for your area.",
+    "countryLabel": "Country",
+    "cityLabel": "City",
+    "cityPlaceholder": "Select a city",
+    "languageLabel": "Language",
+    "confirm": "Confirm",
+    "skip": "Continue with {country}",
+    "close": "Close",
+    "dialogAria": "Location and language selection"
+  },
   "whatsapp": {
     "label": "Contact by WhatsApp"
   },

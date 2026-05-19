@@ -1548,6 +1548,18 @@
     "submit": "Subscríbete",
     "formAria": "Suscripción al newsletter"
   },
+  "LocationModal": {
+    "title": "¿Dónde estás?",
+    "description": "Elige tu país, ciudad e idioma para ver los servicios y precios de tu zona.",
+    "countryLabel": "País",
+    "cityLabel": "Ciudad",
+    "cityPlaceholder": "Selecciona una ciudad",
+    "languageLabel": "Idioma",
+    "confirm": "Confirmar",
+    "skip": "Continuar con {country}",
+    "close": "Cerrar",
+    "dialogAria": "Selección de ubicación e idioma"
+  },
   "whatsapp": {
     "label": "Contactar por WhatsApp"
   },

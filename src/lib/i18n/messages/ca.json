@@ -1548,6 +1548,18 @@
     "submit": "Subscriu’t",
     "formAria": "Subscripció al newsletter"
   },
+  "LocationModal": {
+    "title": "On ets?",
+    "description": "Tria el teu país, ciutat i idioma per veure els serveis i preus de la teva zona.",
+    "countryLabel": "País",
+    "cityLabel": "Ciutat",
+    "cityPlaceholder": "Selecciona una ciutat",
+    "languageLabel": "Idioma",
+    "confirm": "Confirmar",
+    "skip": "Continua amb {country}",
+    "close": "Tanca",
+    "dialogAria": "Selecció d'ubicació i idioma"
+  },
   "whatsapp": {
     "label": "Contactar per WhatsApp"
   },
