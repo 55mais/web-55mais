@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { Dialog } from '@base-ui/react/dialog';
 import { useRouter, usePathname } from '@/lib/i18n/navigation';
 import { locales, type Locale } from '@/lib/i18n/config';
 import { writeLocationCookieClient } from '@/shared/lib/country/cookie-client';
@@ -42,10 +43,13 @@ type Props = {
   labels: LocationModalLabels;
 };
 
+const selectClass =
+  'w-full rounded-lg border border-brand-text/20 bg-white px-3 py-2.5 text-base text-brand-text outline-none focus-visible:border-brand-mustard focus-visible:ring-2 focus-visible:ring-brand-mustard/40';
+
 // First-visit gate (client island). Mounted by PublicShell only when
 // the ack cookie is absent, so it opens from the first paint (no
-// useEffect-set-open → no flash). S2 = minimal functional UI; the
-// responsive/branded Dialog is S3.
+// useEffect-set-open → no flash). Single responsive base-ui Dialog:
+// bottom-sheet < md, centered modal ≥ md (no Sheet+Dialog combo).
 export function LocationModalGate({
   countries,
   cities,
@@ -57,6 +61,7 @@ export function LocationModalGate({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const countryRef = useRef<HTMLSelectElement>(null);
   const [open, setOpen] = useState(true);
   const [countryId, setCountryId] = useState(initialCountryId);
   const [cityId, setCityId] = useState(initialCityId);
@@ -100,112 +105,111 @@ export function LocationModalGate({
     setCityId(''); // reset → Confirm disabled until a city is picked
   };
 
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') skip();
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [open, skip]);
-
-  if (!open) return null;
-
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-label={labels.dialogAria}
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
+    <Dialog.Root
+      open={open}
+      onOpenChange={(next) => {
+        if (!next) skip(); // Esc / backdrop = skip
+      }}
     >
-      <button
-        type="button"
-        aria-hidden="true"
-        tabIndex={-1}
-        onClick={skip}
-        className="absolute inset-0 cursor-default"
-      />
-      <div className="relative w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
-        <button
-          type="button"
-          onClick={skip}
-          aria-label={labels.close}
-          className="absolute right-3 top-3 text-xl leading-none text-brand-text"
+      <Dialog.Portal>
+        <Dialog.Backdrop className="fixed inset-0 z-[100] bg-black/50 transition-opacity duration-150 data-ending-style:opacity-0 data-starting-style:opacity-0 supports-backdrop-filter:backdrop-blur-xs" />
+        <Dialog.Popup
+          aria-modal="true"
+          aria-label={labels.dialogAria}
+          initialFocus={countryRef as React.RefObject<HTMLElement | null>}
+          className="group fixed inset-0 z-[100] flex items-end justify-center p-0 transition-opacity duration-200 data-ending-style:opacity-0 data-starting-style:opacity-0 md:items-center md:p-4"
         >
-          ×
-        </button>
+          <div className="flex max-h-[90vh] w-full flex-col overflow-y-auto rounded-t-2xl bg-white p-6 shadow-xl transition-transform duration-200 group-data-[ending-style]:translate-y-full group-data-[starting-style]:translate-y-full md:max-w-md md:rounded-2xl md:transition-none md:group-data-[ending-style]:translate-y-0 md:group-data-[starting-style]:translate-y-0">
+            <button
+              type="button"
+              onClick={skip}
+              aria-label={labels.close}
+              className="absolute right-3 top-3 text-2xl leading-none text-brand-text/60 transition-colors hover:text-brand-text"
+            >
+              ×
+            </button>
 
-        <h2 className="mb-2 text-lg font-bold text-brand-text">
-          {labels.title}
-        </h2>
-        <p className="mb-4 text-sm text-brand-text/75">{labels.description}</p>
+            <h2 className="mb-1 pr-6 text-xl font-bold text-brand-text">
+              {labels.title}
+            </h2>
+            <p className="mb-5 text-sm text-brand-text/70">
+              {labels.description}
+            </p>
 
-        <label className="mb-3 block text-sm">
-          <span className="mb-1 block font-medium">{labels.countryLabel}</span>
-          <select
-            value={countryId}
-            onChange={(e) => onCountryChange(e.target.value)}
-            className="w-full rounded border px-3 py-2"
-          >
-            {countryOptions.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-        </label>
+            <label className="mb-4 block text-sm">
+              <span className="mb-1.5 block font-medium text-brand-text">
+                {labels.countryLabel}
+              </span>
+              <select
+                ref={countryRef}
+                value={countryId}
+                onChange={(e) => onCountryChange(e.target.value)}
+                className={selectClass}
+              >
+                {countryOptions.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </label>
 
-        <label className="mb-3 block text-sm">
-          <span className="mb-1 block font-medium">{labels.cityLabel}</span>
-          <select
-            value={cityId}
-            onChange={(e) => setCityId(e.target.value)}
-            className="w-full rounded border px-3 py-2"
-          >
-            <option value="">{labels.cityPlaceholder}</option>
-            {cityOptions.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-        </label>
+            <label className="mb-4 block text-sm">
+              <span className="mb-1.5 block font-medium text-brand-text">
+                {labels.cityLabel}
+              </span>
+              <select
+                value={cityId}
+                onChange={(e) => setCityId(e.target.value)}
+                className={selectClass}
+              >
+                <option value="">{labels.cityPlaceholder}</option>
+                {cityOptions.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </label>
 
-        <label className="mb-5 block text-sm">
-          <span className="mb-1 block font-medium">
-            {labels.languageLabel}
-          </span>
-          <select
-            value={locale}
-            onChange={(e) => setLocale(e.target.value)}
-            className="w-full rounded border px-3 py-2"
-          >
-            {locales.map((l) => (
-              <option key={l} value={l}>
-                {LANG_NAMES[l]}
-              </option>
-            ))}
-          </select>
-        </label>
+            <label className="mb-6 block text-sm">
+              <span className="mb-1.5 block font-medium text-brand-text">
+                {labels.languageLabel}
+              </span>
+              <select
+                value={locale}
+                onChange={(e) => setLocale(e.target.value)}
+                className={selectClass}
+              >
+                {locales.map((l) => (
+                  <option key={l} value={l}>
+                    {LANG_NAMES[l]}
+                  </option>
+                ))}
+              </select>
+            </label>
 
-        <div className="flex flex-col gap-2">
-          <button
-            type="button"
-            onClick={confirm}
-            disabled={!countryId || !cityId}
-            className="rounded bg-brand-mustard px-4 py-2 font-bold text-brand-text disabled:opacity-60"
-          >
-            {labels.confirm}
-          </button>
-          <button
-            type="button"
-            onClick={skip}
-            className="rounded px-4 py-2 text-sm text-brand-text/75 underline"
-          >
-            {labels.skip}
-          </button>
-        </div>
-      </div>
-    </div>
+            <div className="flex flex-col gap-2">
+              <button
+                type="button"
+                onClick={confirm}
+                disabled={!countryId || !cityId}
+                className="rounded-lg bg-brand-mustard px-4 py-2.5 font-bold text-brand-text transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {labels.confirm}
+              </button>
+              <button
+                type="button"
+                onClick={skip}
+                className="rounded-lg px-4 py-2 text-sm text-brand-text/70 underline-offset-2 hover:underline"
+              >
+                {labels.skip}
+              </button>
+            </div>
+          </div>
+        </Dialog.Popup>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }

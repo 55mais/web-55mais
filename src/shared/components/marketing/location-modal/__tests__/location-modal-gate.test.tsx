@@ -148,7 +148,9 @@ describe('LocationModalGate', () => {
 
   it('Esc closes the modal = skip (ack only)', () => {
     setup();
-    fireEvent.keyDown(window, { key: 'Escape' });
+    // base-ui Dialog handles Escape via a document-level listener
+    // (the realistic propagation path from the focused dialog).
+    fireEvent.keyDown(document, { key: 'Escape' });
     expect(writeAck).toHaveBeenCalledTimes(1);
     expect(writeLocation).not.toHaveBeenCalled();
     expect(screen.queryByRole('dialog')).toBeNull();
