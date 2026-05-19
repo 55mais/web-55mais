@@ -91,9 +91,17 @@ type WizardHints = {
   successBody: string;
 };
 
+type LocationHints = {
+  countryLabel: string;
+  countryPlaceholder: string;
+  cityLabel: string;
+  cityPlaceholder: string;
+};
+
 export type ServiceHireHints = {
   addressLabel: string;
   addressPlaceholder: string;
+  location: LocationHints;
   termsLabel: string;
   submitDisabledHint: string;
   addressError: string;
@@ -118,6 +126,12 @@ export function buildServiceHireHints(
   return {
     addressLabel: g('addressLabel'),
     addressPlaceholder: g('addressPlaceholder'),
+    location: {
+      countryLabel: g('countryLabel'),
+      countryPlaceholder: g('countryPlaceholder'),
+      cityLabel: g('cityLabel'),
+      cityPlaceholder: g('cityPlaceholder'),
+    },
     termsLabel: g('termsLabel'),
     submitDisabledHint: g('submitDisabledHint'),
     addressError: g('validationAddressRequired'),

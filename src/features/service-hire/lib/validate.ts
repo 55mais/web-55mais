@@ -36,14 +36,24 @@ export type ValidationContext = {
   questions: Question[];
   isAuthenticated: boolean;
   messages: ValidationMessages;
+  // When the País/Ciudad selects are present (wizard, S4+) the order's
+  // city must come from an authoritative cities.id, so city_id is
+  // required. Absent/false on the Mapbox-only path → resolved by slug
+  // (no regression).
+  requireCityId?: boolean;
 };
 
 export function validateServiceHire(ctx: ValidationContext): ServiceHireErrors | null {
   const { state, questions, isAuthenticated, messages: m } = ctx;
   const errors: ServiceHireErrors = {};
 
-  // Address: needs at minimum a country_code (resolved from Mapbox) to map to a country.
-  if (!state.address.country_code || !state.address.raw_text.trim()) {
+  // Address: needs at minimum a country_code to map to a country and a
+  // raw_text. With selects (requireCityId) also an authoritative city_id.
+  if (
+    !state.address.country_code ||
+    !state.address.raw_text.trim() ||
+    (ctx.requireCityId && !state.address.city_id)
+  ) {
     errors.address = m.addressRequired;
   }
 

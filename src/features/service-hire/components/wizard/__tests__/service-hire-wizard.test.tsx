@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import type { ServiceForHire } from '../../../actions/get-service-for-hire';
 import type { ServiceHireHints } from '../../../lib/build-hints';
+import type { HireLocationOptions } from '../../../lib/hire-location-types';
 
 const submitMock = vi.fn();
 
@@ -114,9 +115,27 @@ const v = {
   billingCustomIncomplete: 'billing',
 };
 
+const locationOptions: HireLocationOptions = {
+  countries: [{ code: 'es', name: 'España' }],
+  citiesByCountry: { es: [{ id: 'c-es-mad', name: 'Madrid' }] },
+  selected: {
+    id: 'c-es-mad',
+    slug: 'madrid',
+    name: 'Madrid',
+    countryId: 'co-es',
+    countryCode: 'ES',
+  },
+};
+
 const hints: ServiceHireHints = {
   addressLabel: 'Dirección',
   addressPlaceholder: 'Calle…',
+  location: {
+    countryLabel: 'País',
+    countryPlaceholder: 'Elegí un país',
+    cityLabel: 'Ciudad',
+    cityPlaceholder: 'Elegí una ciudad',
+  },
   termsLabel: 'Acepto los términos',
   submitDisabledHint: 'Completa el paso',
   addressError: 'addr',
@@ -157,6 +176,7 @@ function setup(onClose = vi.fn()) {
       locale="es"
       fiscalIdTypes={[]}
       hints={hints}
+      locationOptions={locationOptions}
       onClose={onClose}
     />,
   );
@@ -185,6 +205,17 @@ describe('ServiceHireWizard', () => {
     setup();
     expect(screen.getByText('Paso 1 de 5')).toBeInTheDocument();
     expect(screen.getByText(hints.wizard.title)).toBeInTheDocument();
+  });
+
+  it('step 1 renders País + Ciudad selects with the cookie prefill', () => {
+    setup();
+    expect(screen.getByText(hints.location.countryLabel)).toBeInTheDocument();
+    expect(screen.getByText(hints.location.cityLabel)).toBeInTheDocument();
+    // Cookie city (Madrid/ES) is prefilled, so once the address text is
+    // filled step 1 is valid (city_id present satisfies requireCityId).
+    click('fill-address');
+    click(hints.wizard.next);
+    expect(screen.getByText('Paso 2 de 5')).toBeInTheDocument();
   });
 
   it('blocks Siguiente on an invalid step and shows the error', () => {

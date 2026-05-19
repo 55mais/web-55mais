@@ -11,8 +11,10 @@ import {
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { getServiceForHire } from '@/features/service-hire/actions/get-service-for-hire';
+import { getHireLocationOptions } from '@/features/service-hire/actions/get-hire-location-options';
 import type { PublishedServiceOption } from '@/features/service-hire/actions/list-published-services';
 import type { ServiceForHire } from '@/features/service-hire/actions/get-service-for-hire';
+import type { HireLocationOptions } from '@/features/service-hire/lib/hire-location-types';
 import type { FiscalIdTypeOption } from '@/features/service-hire/actions/list-fiscal-id-types';
 import { buildServiceHireHints } from '@/features/service-hire/lib/build-hints';
 import { ServiceHireWizard } from '@/features/service-hire/components/wizard';
@@ -28,23 +30,31 @@ export function TestServiceHirePage({ services, locale, fiscalIdTypes }: Props) 
   const tg = useTranslations();
   const [serviceId, setServiceId] = useState<string>('');
   const [service, setService] = useState<ServiceForHire | null>(null);
+  const [locationOptions, setLocationOptions] =
+    useState<HireLocationOptions | null>(null);
   const [isLoading, startTransition] = useTransition();
 
   const handleSelect = (id: string) => {
     setServiceId(id);
     if (!id) {
       setService(null);
+      setLocationOptions(null);
       return;
     }
     startTransition(async () => {
-      const data = await getServiceForHire(id, locale);
+      const [data, opts] = await Promise.all([
+        getServiceForHire(id, locale),
+        getHireLocationOptions(id, locale),
+      ]);
       setService(data);
+      setLocationOptions(opts);
     });
   };
 
   const reset = () => {
     setServiceId('');
     setService(null);
+    setLocationOptions(null);
   };
 
   return (
@@ -77,7 +87,7 @@ export function TestServiceHirePage({ services, locale, fiscalIdTypes }: Props) 
         <p className="text-muted-foreground text-sm">{t('loading')}</p>
       )}
 
-      {service && !isLoading && (
+      {service && locationOptions && !isLoading && (
         <div className="space-y-3 rounded-md border p-4">
           <p className="text-muted-foreground text-xs">
             {t('countriesLabel')}: {service.activeCountryCodes.join(', ') || '—'}{' '}
@@ -88,6 +98,7 @@ export function TestServiceHirePage({ services, locale, fiscalIdTypes }: Props) 
             locale={locale}
             fiscalIdTypes={fiscalIdTypes}
             hints={buildServiceHireHints(tg, service.name)}
+            locationOptions={locationOptions}
             onClose={reset}
           />
         </div>

@@ -1,7 +1,5 @@
 'use client';
 
-import { Label } from '@/components/ui/label';
-import { AddressAutocomplete } from '@/shared/components/address-autocomplete';
 import { ServiceQuestionsRenderer } from '@/shared/components/question-renderers';
 import type { ServiceForHire } from '../../actions/get-service-for-hire';
 import type { FiscalIdTypeOption } from '../../actions/list-fiscal-id-types';
@@ -9,9 +7,11 @@ import type { ServiceHireFormState } from '../../types';
 import type { ServiceHireErrors } from '../../lib/validate';
 import type { ServiceHireHints } from '../../lib/build-hints';
 import type { WizardStep } from '../../lib/step-validation';
+import type { HireLocationOptions } from '../../lib/hire-location-types';
 import { SchedulingBlock } from '../scheduling-block';
 import { AuthGate, type AuthState } from '../auth-gate';
 import { BillingChoiceFields } from '../billing-choice-fields';
+import { StepOneLocation } from './step-one-location';
 
 type Props = {
   step: WizardStep;
@@ -26,6 +26,7 @@ type Props = {
   errors: ServiceHireErrors | null;
   submitError: string | null;
   hints: ServiceHireHints;
+  locationOptions: HireLocationOptions;
 };
 
 // Renders only the active step's fields. Reuses the existing,
@@ -45,18 +46,17 @@ export function WizardSteps({
   errors,
   submitError,
   hints,
+  locationOptions,
 }: Props) {
   if (step === 1) {
     return (
       <div className="space-y-1.5">
-        <Label htmlFor="address">{hints.addressLabel}</Label>
-        <AddressAutocomplete
-          id="address"
-          value={form.address}
-          onChange={(v) => onChange({ address: v })}
-          countryCodes={service.activeCountryCodes}
-          language={locale}
-          placeholder={hints.addressPlaceholder}
+        <StepOneLocation
+          address={form.address}
+          onChange={(address) => onChange({ address })}
+          options={locationOptions}
+          locale={locale}
+          hints={hints}
           hasError={Boolean(errors?.address)}
         />
         {errors?.address && (

@@ -13,6 +13,9 @@ const addressSchema = z.object({
   raw_text: z.string().min(1),
   country_code: z.string().min(2),
   city_name: z.string(),
+  // Additive: present when picked from the Ciudad select; null on the
+  // Mapbox-only path. Server resolves by id when set, else by slug.
+  city_id: z.string().uuid().nullable().optional(),
 });
 
 const schedulingSchema = z

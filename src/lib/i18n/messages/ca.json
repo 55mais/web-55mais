@@ -941,7 +941,11 @@
     "successTitle": "Comanda creada correctament!",
     "successBody": "Hem rebut la teva sol·licitud. El nostre equip et contactarà per coordinar els detalls.",
     "billingToInitial": "Amb les mateixes dades",
-    "billingToOther": "A nom d'un altre titular fiscal"
+    "billingToOther": "A nom d'un altre titular fiscal",
+    "countryLabel": "País",
+    "countryPlaceholder": "Tria un país",
+    "cityLabel": "Ciutat",
+    "cityPlaceholder": "Tria una ciutat"
   },
   "TalentOnboarding": {
     "pageTitle": "Completa el teu perfil",

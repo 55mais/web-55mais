@@ -941,7 +941,11 @@
     "successTitle": "Order created successfully!",
     "successBody": "We received your request. Our team will contact you to coordinate the details.",
     "billingToInitial": "With the same details",
-    "billingToOther": "To a different tax holder"
+    "billingToOther": "To a different tax holder",
+    "countryLabel": "Country",
+    "countryPlaceholder": "Choose a country",
+    "cityLabel": "City",
+    "cityPlaceholder": "Choose a city"
   },
   "TalentOnboarding": {
     "pageTitle": "Complete your profile",

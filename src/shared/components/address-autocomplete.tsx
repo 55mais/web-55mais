@@ -15,6 +15,11 @@ export type AddressValue = {
   raw_text: string;
   country_code: string;
   city_name: string;
+  // Authoritative `cities.id` when the user picked a city from the
+  // País/Ciudad selects. Optional & additive: absent/null on every
+  // existing consumer and the Mapbox-only path → submit falls back to
+  // resolving the city by slug (no regression).
+  city_id?: string | null;
 };
 
 export type AddressAutocompleteProps = {
@@ -161,6 +166,7 @@ function parseFeature(feature: Feature, fallbackText: string): AddressValue {
     raw_text: feature.properties?.full_address ?? fallbackText,
     country_code: (ctx.country?.country_code ?? '').toLowerCase(),
     city_name: cityName,
+    city_id: null,
   };
 }
 
@@ -270,6 +276,7 @@ export function AddressAutocomplete({
             street: e.target.value,
             country_code: '',
             city_name: '',
+            city_id: null,
           });
         }}
         onFocus={() => {
@@ -335,4 +342,5 @@ export const emptyAddress: AddressValue = {
   raw_text: '',
   country_code: '',
   city_name: '',
+  city_id: null,
 };

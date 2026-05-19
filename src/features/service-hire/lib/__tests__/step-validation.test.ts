@@ -80,6 +80,26 @@ describe('validateStep — step 1 (address)', () => {
     const c = ctx({ isAuthenticated: false, authChoice: null });
     expect(validateStep(1, c)).toBeNull();
   });
+
+  it('requireCityId off (Mapbox path) ⇒ city_id not demanded', () => {
+    const s = baseState();
+    s.address.city_id = null;
+    expect(validateStep(1, ctx({ state: s }))).toBeNull();
+  });
+
+  it('requireCityId on + no city_id ⇒ step 1 address error', () => {
+    const s = baseState();
+    s.address.city_id = null;
+    const c = ctx({ state: s, requireCityId: true });
+    expect(validateStep(1, c)?.address).toBe('addr');
+    expect(isStepComplete(1, c)).toBe(false);
+  });
+
+  it('requireCityId on + city_id present ⇒ step 1 complete', () => {
+    const s = baseState();
+    s.address.city_id = '11111111-1111-1111-1111-111111111111';
+    expect(validateStep(1, ctx({ state: s, requireCityId: true }))).toBeNull();
+  });
 });
 
 describe('validateStep — step 2 (answers)', () => {

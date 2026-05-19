@@ -7,6 +7,7 @@ import type { Json } from '@/lib/supabase/database.types';
 import { composeAppointmentUtc } from '@/shared/lib/datetime';
 import type { Question } from '@/shared/lib/questions';
 import { submitServiceHireSchema } from '../schemas';
+import { resolveCityQuery } from '../lib/resolve-city-query';
 import { buildOrderPayload, type OrderContact } from './_helpers/build-order-payload';
 
 const FALLBACK_TIMEZONE = 'Europe/Madrid';
@@ -69,13 +70,26 @@ export async function submitServiceHire(formData: FormData): Promise<SubmitResul
       `[submit-service-hire] country ${state.address.country_code} has no timezone; falling back to ${FALLBACK_TIMEZONE}`,
     );
   }
+  // city_id (from the Ciudad select) is authoritative; without it we
+  // fall back to the legacy slug heuristic so the Mapbox-only path
+  // keeps resolving exactly as before (no regression).
   let serviceCityId: string | null = null;
-  if (state.address.city_name) {
+  const cityQuery = resolveCityQuery(state.address);
+  if (cityQuery.by === 'id') {
+    const { data: city } = await supabase
+      .from('cities')
+      .select('id')
+      .eq('id', cityQuery.id)
+      .eq('country_id', country.id)
+      .eq('is_active', true)
+      .maybeSingle();
+    serviceCityId = city?.id ?? null;
+  } else if (cityQuery.by === 'slug') {
     const { data: city } = await supabase
       .from('cities')
       .select('id')
       .eq('country_id', country.id)
-      .ilike('slug', state.address.city_name.toLowerCase().replace(/\s+/g, '-'))
+      .ilike('slug', cityQuery.slug)
       .maybeSingle();
     serviceCityId = city?.id ?? null;
   }

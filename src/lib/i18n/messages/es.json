@@ -941,7 +941,11 @@
     "successTitle": "¡Pedido creado correctamente!",
     "successBody": "Recibimos tu solicitud. Nuestro equipo te contactará para coordinar los detalles.",
     "billingToInitial": "Con los mismos datos",
-    "billingToOther": "A nombre de otro titular fiscal"
+    "billingToOther": "A nombre de otro titular fiscal",
+    "countryLabel": "País",
+    "countryPlaceholder": "Elegí un país",
+    "cityLabel": "Ciudad",
+    "cityPlaceholder": "Elegí una ciudad"
   },
   "TalentOnboarding": {
     "pageTitle": "Completa tu perfil",

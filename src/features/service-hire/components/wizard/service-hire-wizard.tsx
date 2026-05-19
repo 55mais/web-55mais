@@ -16,6 +16,8 @@ import {
   type StepValidationContext,
   type WizardStep,
 } from '../../lib/step-validation';
+import { computeLocationPrefill } from '../../lib/location-prefill';
+import type { HireLocationOptions } from '../../lib/hire-location-types';
 import { type AuthState } from '../auth-gate';
 import { StepHeader } from './step-header';
 import { WizardFooter } from './wizard-footer';
@@ -26,6 +28,7 @@ type Props = {
   locale: string;
   fiscalIdTypes: FiscalIdTypeOption[];
   hints: ServiceHireHints;
+  locationOptions: HireLocationOptions;
   onClose: () => void;
 };
 
@@ -55,16 +58,30 @@ export function ServiceHireWizard({
   locale,
   fiscalIdTypes,
   hints,
+  locationOptions,
   onClose,
 }: Props) {
   const [step, setStep] = useState<WizardStep>(1);
-  const [form, setForm] = useState<ServiceHireFormState>({
-    address: emptyAddress,
-    scheduling: emptyScheduling,
-    answers: {},
-    notes: '',
-    terms_accepted: false,
-    billing: emptyBilling,
+  const [form, setForm] = useState<ServiceHireFormState>(() => {
+    // Cookie-first prefill: País + Ciudad come from the selected city
+    // (when it belongs to an active country), else first active country.
+    const pf = computeLocationPrefill(
+      locationOptions.selected,
+      service.activeCountryCodes,
+    );
+    return {
+      address: {
+        ...emptyAddress,
+        country_code: pf.countryCode,
+        city_id: pf.cityId,
+        city_name: pf.cityName,
+      },
+      scheduling: emptyScheduling,
+      answers: {},
+      notes: '',
+      terms_accepted: false,
+      billing: emptyBilling,
+    };
   });
   const [authState, setAuthState] = useState<AuthState>({ status: 'idle' });
   const [errors, setErrors] = useState<ServiceHireErrors | null>(null);
@@ -85,6 +102,9 @@ export function ServiceHireWizard({
     isAuthenticated,
     authChoice,
     messages: hints.validation,
+    // The wizard always renders the País/Ciudad selects, so the order
+    // city must come from an authoritative cities.id.
+    requireCityId: true,
   };
 
   useEffect(() => {
@@ -164,6 +184,7 @@ export function ServiceHireWizard({
         errors={errors}
         submitError={submitError}
         hints={hints}
+        locationOptions={locationOptions}
       />
       <WizardFooter
         step={step}
