@@ -1599,5 +1599,95 @@
       "lead": "The page you are looking for doesn’t exist or has moved.",
       "home": "Back home"
     }
+  },
+  "Auth": {
+    "brand": {
+      "logoAlt": "55mas"
+    },
+    "login": {
+      "title": "Sign in",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "Type here…",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Type here…",
+      "passwordToggleShow": "Show password",
+      "passwordToggleHide": "Hide password",
+      "submit": "Sign in",
+      "submitting": "Signing in…",
+      "forgot": "Forgot your password?",
+      "orWith": "or sign in with",
+      "googleButton": "Sign in with Google",
+      "googleSoon": "Coming soon",
+      "createAccount": "Create an account",
+      "errorInvalidCredentials": "Wrong email or password.",
+      "errorEmailNotConfirmed": "Please verify your email before signing in.",
+      "errorExpired": "The link expired or has already been used. Please try again.",
+      "errorGeneric": "We couldn’t sign you in. Please try again."
+    },
+    "register": {
+      "title": "Create an account",
+      "fullNameLabel": "Full name",
+      "fullNamePlaceholder": "Type here…",
+      "phoneLabel": "Phone",
+      "phonePlaceholder": "+1 555 000 0000",
+      "countryLabel": "Country",
+      "countryPlaceholder": "Choose a country",
+      "cityLabel": "City",
+      "cityPlaceholder": "Choose a city",
+      "cityEmptyHint": "No cities available in this country yet.",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "Type here…",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Type here…",
+      "passwordHint": "At least 8 characters.",
+      "submit": "Create account",
+      "submitting": "Creating…",
+      "backToLogin": "I already have an account",
+      "successTitle": "Check your email",
+      "successBody": "We sent a confirmation link to {email}. Click it to activate your account.",
+      "successCta": "Back to sign in",
+      "errorEmailRegistered": "That email already has an account. Try signing in.",
+      "errorWeakPassword": "Your password doesn’t meet the minimum requirements.",
+      "errorInvalidEmail": "Invalid email.",
+      "errorGeneric": "We couldn’t create your account. Please try again."
+    },
+    "forgot": {
+      "title": "Reset password",
+      "body": "Enter your email and we’ll send you a link to reset it.",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "Type here…",
+      "submit": "Send link",
+      "submitting": "Sending…",
+      "sentTitle": "Check your email",
+      "sentBody": "If that address is registered, we sent a link to reset the password.",
+      "backToLogin": "Back to sign in"
+    },
+    "reset": {
+      "title": "New password",
+      "body": "Choose your new password.",
+      "passwordLabel": "New password",
+      "passwordPlaceholder": "Type here…",
+      "passwordHint": "At least 8 characters.",
+      "confirmLabel": "Confirm password",
+      "confirmPlaceholder": "Type here…",
+      "submit": "Save new password",
+      "submitting": "Saving…",
+      "successTitle": "Done",
+      "successBody": "Your password has been updated.",
+      "errorMismatch": "Passwords don’t match.",
+      "errorWeakPassword": "Your password doesn’t meet the minimum requirements.",
+      "errorNoSession": "The link expired or has already been used. Request a new one.",
+      "errorCodeAlreadyUsed": "This link has already been opened. If that wasn’t you, request a new one.",
+      "errorGeneric": "We couldn’t update the password. Please try again."
+    },
+    "callback": {
+      "expiredTitle": "Link expired",
+      "expiredBody": "The link expired or has already been used.",
+      "expiredCta": "Try again"
+    },
+    "account": {
+      "welcome": "Welcome, {name}",
+      "placeholder": "Your personal area will be available soon."
+    }
   }
 }

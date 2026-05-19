@@ -1599,5 +1599,95 @@
       "lead": "La page que vous cherchez n’existe pas ou a été déplacée.",
       "home": "Retour à l’accueil"
     }
+  },
+  "Auth": {
+    "brand": {
+      "logoAlt": "55mas"
+    },
+    "login": {
+      "title": "Connexion",
+      "emailLabel": "Adresse e-mail",
+      "emailPlaceholder": "Saisissez ici…",
+      "passwordLabel": "Mot de passe",
+      "passwordPlaceholder": "Saisissez ici…",
+      "passwordToggleShow": "Afficher le mot de passe",
+      "passwordToggleHide": "Masquer le mot de passe",
+      "submit": "Connexion",
+      "submitting": "Connexion…",
+      "forgot": "Mot de passe oublié ?",
+      "orWith": "ou se connecter avec",
+      "googleButton": "Se connecter avec Google",
+      "googleSoon": "Bientôt disponible",
+      "createAccount": "Créer un compte",
+      "errorInvalidCredentials": "E-mail ou mot de passe incorrect.",
+      "errorEmailNotConfirmed": "Vérifiez votre e-mail avant de vous connecter.",
+      "errorExpired": "Le lien a expiré ou a déjà été utilisé. Réessayez.",
+      "errorGeneric": "Impossible de vous connecter. Réessayez."
+    },
+    "register": {
+      "title": "Créer un compte",
+      "fullNameLabel": "Nom complet",
+      "fullNamePlaceholder": "Saisissez ici…",
+      "phoneLabel": "Téléphone",
+      "phonePlaceholder": "+33 6 00 00 00 00",
+      "countryLabel": "Pays",
+      "countryPlaceholder": "Choisissez un pays",
+      "cityLabel": "Ville",
+      "cityPlaceholder": "Choisissez une ville",
+      "cityEmptyHint": "Aucune ville disponible dans ce pays pour le moment.",
+      "emailLabel": "Adresse e-mail",
+      "emailPlaceholder": "Saisissez ici…",
+      "passwordLabel": "Mot de passe",
+      "passwordPlaceholder": "Saisissez ici…",
+      "passwordHint": "Au moins 8 caractères.",
+      "submit": "Créer le compte",
+      "submitting": "Création…",
+      "backToLogin": "J’ai déjà un compte",
+      "successTitle": "Vérifiez votre e-mail",
+      "successBody": "Nous avons envoyé un lien de confirmation à {email}. Cliquez dessus pour activer votre compte.",
+      "successCta": "Retour à la connexion",
+      "errorEmailRegistered": "Cet e-mail a déjà un compte. Essayez de vous connecter.",
+      "errorWeakPassword": "Le mot de passe ne respecte pas les exigences minimales.",
+      "errorInvalidEmail": "E-mail invalide.",
+      "errorGeneric": "Impossible de créer le compte. Réessayez."
+    },
+    "forgot": {
+      "title": "Récupérer le mot de passe",
+      "body": "Saisissez votre e-mail et nous vous enverrons un lien pour le réinitialiser.",
+      "emailLabel": "Adresse e-mail",
+      "emailPlaceholder": "Saisissez ici…",
+      "submit": "Envoyer le lien",
+      "submitting": "Envoi…",
+      "sentTitle": "Vérifiez votre e-mail",
+      "sentBody": "Si cette adresse est enregistrée, nous avons envoyé un lien pour réinitialiser le mot de passe.",
+      "backToLogin": "Retour à la connexion"
+    },
+    "reset": {
+      "title": "Nouveau mot de passe",
+      "body": "Choisissez votre nouveau mot de passe.",
+      "passwordLabel": "Nouveau mot de passe",
+      "passwordPlaceholder": "Saisissez ici…",
+      "passwordHint": "Au moins 8 caractères.",
+      "confirmLabel": "Confirmer le mot de passe",
+      "confirmPlaceholder": "Saisissez ici…",
+      "submit": "Enregistrer le nouveau mot de passe",
+      "submitting": "Enregistrement…",
+      "successTitle": "C’est fait",
+      "successBody": "Votre mot de passe a été mis à jour.",
+      "errorMismatch": "Les mots de passe ne correspondent pas.",
+      "errorWeakPassword": "Le mot de passe ne respecte pas les exigences minimales.",
+      "errorNoSession": "Le lien a expiré ou a déjà été utilisé. Demandez-en un nouveau.",
+      "errorCodeAlreadyUsed": "Ce lien a déjà été ouvert. Si ce n’était pas vous, demandez-en un nouveau.",
+      "errorGeneric": "Impossible de mettre à jour le mot de passe. Réessayez."
+    },
+    "callback": {
+      "expiredTitle": "Lien expiré",
+      "expiredBody": "Le lien a expiré ou a déjà été utilisé.",
+      "expiredCta": "Réessayer"
+    },
+    "account": {
+      "welcome": "Bienvenue, {name}",
+      "placeholder": "Votre espace personnel sera bientôt disponible."
+    }
   }
 }

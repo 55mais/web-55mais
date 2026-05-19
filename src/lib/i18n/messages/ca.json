@@ -1599,5 +1599,95 @@
       "lead": "La pàgina que cerques no existeix o s’ha mogut.",
       "home": "Tornar a l’inici"
     }
+  },
+  "Auth": {
+    "brand": {
+      "logoAlt": "55mas"
+    },
+    "login": {
+      "title": "Iniciar sessió",
+      "emailLabel": "Adreça electrònica",
+      "emailPlaceholder": "Escriu aquí…",
+      "passwordLabel": "Contrasenya",
+      "passwordPlaceholder": "Escriu aquí…",
+      "passwordToggleShow": "Mostrar contrasenya",
+      "passwordToggleHide": "Amagar contrasenya",
+      "submit": "Iniciar sessió",
+      "submitting": "Iniciant sessió…",
+      "forgot": "Has oblidat la contrasenya?",
+      "orWith": "o entrar amb",
+      "googleButton": "Iniciar sessió amb Google",
+      "googleSoon": "Pròximament",
+      "createAccount": "Crear un compte",
+      "errorInvalidCredentials": "El correu o la contrasenya són incorrectes.",
+      "errorEmailNotConfirmed": "Verifica el teu correu abans d’iniciar sessió.",
+      "errorExpired": "L’enllaç ha caducat o ja s’ha utilitzat. Torna-ho a provar.",
+      "errorGeneric": "No hem pogut iniciar sessió. Torna-ho a provar."
+    },
+    "register": {
+      "title": "Crear un compte",
+      "fullNameLabel": "Nom complet",
+      "fullNamePlaceholder": "Escriu aquí…",
+      "phoneLabel": "Telèfon",
+      "phonePlaceholder": "+34 600 000 000",
+      "countryLabel": "País",
+      "countryPlaceholder": "Tria un país",
+      "cityLabel": "Ciutat",
+      "cityPlaceholder": "Tria una ciutat",
+      "cityEmptyHint": "No hi ha ciutats disponibles en aquest país encara.",
+      "emailLabel": "Adreça electrònica",
+      "emailPlaceholder": "Escriu aquí…",
+      "passwordLabel": "Contrasenya",
+      "passwordPlaceholder": "Escriu aquí…",
+      "passwordHint": "Mínim 8 caràcters.",
+      "submit": "Crear compte",
+      "submitting": "Creant…",
+      "backToLogin": "Ja tinc un compte",
+      "successTitle": "Revisa el teu correu",
+      "successBody": "T’hem enviat un enllaç de confirmació a {email}. Fes clic per activar el teu compte.",
+      "successCta": "Tornar a iniciar sessió",
+      "errorEmailRegistered": "Aquest correu ja té un compte. Prova d’iniciar sessió.",
+      "errorWeakPassword": "La contrasenya no compleix els requisits mínims.",
+      "errorInvalidEmail": "Correu no vàlid.",
+      "errorGeneric": "No hem pogut crear el compte. Torna-ho a provar."
+    },
+    "forgot": {
+      "title": "Recuperar contrasenya",
+      "body": "Introdueix el teu correu i t’enviarem un enllaç per restablir-la.",
+      "emailLabel": "Adreça electrònica",
+      "emailPlaceholder": "Escriu aquí…",
+      "submit": "Enviar enllaç",
+      "submitting": "Enviant…",
+      "sentTitle": "Revisa el teu correu",
+      "sentBody": "Si aquesta adreça està registrada, hem enviat un enllaç per restablir la contrasenya.",
+      "backToLogin": "Tornar a iniciar sessió"
+    },
+    "reset": {
+      "title": "Nova contrasenya",
+      "body": "Tria la teva nova contrasenya.",
+      "passwordLabel": "Nova contrasenya",
+      "passwordPlaceholder": "Escriu aquí…",
+      "passwordHint": "Mínim 8 caràcters.",
+      "confirmLabel": "Confirmar contrasenya",
+      "confirmPlaceholder": "Escriu aquí…",
+      "submit": "Desar nova contrasenya",
+      "submitting": "Desant…",
+      "successTitle": "Fet",
+      "successBody": "La teva contrasenya s’ha actualitzat.",
+      "errorMismatch": "Les contrasenyes no coincideixen.",
+      "errorWeakPassword": "La contrasenya no compleix els requisits mínims.",
+      "errorNoSession": "L’enllaç ha caducat o ja s’ha utilitzat. Demana’n un de nou.",
+      "errorCodeAlreadyUsed": "Aquest enllaç ja s’ha obert. Si no vas ser tu, demana’n un de nou.",
+      "errorGeneric": "No hem pogut actualitzar la contrasenya. Torna-ho a provar."
+    },
+    "callback": {
+      "expiredTitle": "Enllaç caducat",
+      "expiredBody": "L’enllaç ha caducat o ja s’ha utilitzat.",
+      "expiredCta": "Tornar-ho a provar"
+    },
+    "account": {
+      "welcome": "Benvingut, {name}",
+      "placeholder": "La teva àrea personal estarà disponible aviat."
+    }
   }
 }

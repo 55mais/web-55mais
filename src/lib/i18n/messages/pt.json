@@ -1599,5 +1599,95 @@
       "lead": "A página que procuras não existe ou foi movida.",
       "home": "Voltar ao início"
     }
+  },
+  "Auth": {
+    "brand": {
+      "logoAlt": "55mas"
+    },
+    "login": {
+      "title": "Iniciar sessão",
+      "emailLabel": "Endereço de e-mail",
+      "emailPlaceholder": "Escreva aqui…",
+      "passwordLabel": "Senha",
+      "passwordPlaceholder": "Escreva aqui…",
+      "passwordToggleShow": "Mostrar senha",
+      "passwordToggleHide": "Ocultar senha",
+      "submit": "Iniciar sessão",
+      "submitting": "A iniciar sessão…",
+      "forgot": "Esqueceu a senha?",
+      "orWith": "ou aceder com",
+      "googleButton": "Iniciar sessão com Google",
+      "googleSoon": "Em breve",
+      "createAccount": "Criar conta",
+      "errorInvalidCredentials": "E-mail ou senha incorretos.",
+      "errorEmailNotConfirmed": "Confirme o seu e-mail antes de iniciar sessão.",
+      "errorExpired": "O link expirou ou já foi usado. Tente de novo.",
+      "errorGeneric": "Não foi possível iniciar sessão. Tente de novo."
+    },
+    "register": {
+      "title": "Criar conta",
+      "fullNameLabel": "Nome completo",
+      "fullNamePlaceholder": "Escreva aqui…",
+      "phoneLabel": "Telefone",
+      "phonePlaceholder": "+351 900 000 000",
+      "countryLabel": "País",
+      "countryPlaceholder": "Escolha um país",
+      "cityLabel": "Cidade",
+      "cityPlaceholder": "Escolha uma cidade",
+      "cityEmptyHint": "Ainda não há cidades disponíveis neste país.",
+      "emailLabel": "Endereço de e-mail",
+      "emailPlaceholder": "Escreva aqui…",
+      "passwordLabel": "Senha",
+      "passwordPlaceholder": "Escreva aqui…",
+      "passwordHint": "Pelo menos 8 caracteres.",
+      "submit": "Criar conta",
+      "submitting": "A criar…",
+      "backToLogin": "Já tenho conta",
+      "successTitle": "Verifique o seu e-mail",
+      "successBody": "Enviámos um link de confirmação para {email}. Clique para ativar a sua conta.",
+      "successCta": "Voltar ao início de sessão",
+      "errorEmailRegistered": "Esse e-mail já tem uma conta. Tente iniciar sessão.",
+      "errorWeakPassword": "A senha não cumpre os requisitos mínimos.",
+      "errorInvalidEmail": "E-mail inválido.",
+      "errorGeneric": "Não foi possível criar a conta. Tente de novo."
+    },
+    "forgot": {
+      "title": "Recuperar senha",
+      "body": "Introduza o seu e-mail e enviar-lhe-emos um link para a redefinir.",
+      "emailLabel": "Endereço de e-mail",
+      "emailPlaceholder": "Escreva aqui…",
+      "submit": "Enviar link",
+      "submitting": "A enviar…",
+      "sentTitle": "Verifique o seu e-mail",
+      "sentBody": "Se esse endereço estiver registado, enviámos um link para redefinir a senha.",
+      "backToLogin": "Voltar ao início de sessão"
+    },
+    "reset": {
+      "title": "Nova senha",
+      "body": "Escolha a sua nova senha.",
+      "passwordLabel": "Nova senha",
+      "passwordPlaceholder": "Escreva aqui…",
+      "passwordHint": "Pelo menos 8 caracteres.",
+      "confirmLabel": "Confirmar senha",
+      "confirmPlaceholder": "Escreva aqui…",
+      "submit": "Guardar nova senha",
+      "submitting": "A guardar…",
+      "successTitle": "Pronto",
+      "successBody": "A sua senha foi atualizada.",
+      "errorMismatch": "As senhas não coincidem.",
+      "errorWeakPassword": "A senha não cumpre os requisitos mínimos.",
+      "errorNoSession": "O link expirou ou já foi usado. Peça um novo.",
+      "errorCodeAlreadyUsed": "Este link já foi aberto. Se não foi você, peça um novo.",
+      "errorGeneric": "Não foi possível atualizar a senha. Tente de novo."
+    },
+    "callback": {
+      "expiredTitle": "Link expirado",
+      "expiredBody": "O link expirou ou já foi usado.",
+      "expiredCta": "Tentar de novo"
+    },
+    "account": {
+      "welcome": "Bem-vindo, {name}",
+      "placeholder": "A sua área pessoal estará disponível em breve."
+    }
   }
 }

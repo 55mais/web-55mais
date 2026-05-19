@@ -1599,5 +1599,95 @@
       "lead": "La página que buscás no existe o fue movida.",
       "home": "Volver al inicio"
     }
+  },
+  "Auth": {
+    "brand": {
+      "logoAlt": "55mas"
+    },
+    "login": {
+      "title": "Iniciar sesión",
+      "emailLabel": "Dirección de correo electrónico",
+      "emailPlaceholder": "Escriba aquí…",
+      "passwordLabel": "Contraseña",
+      "passwordPlaceholder": "Escriba aquí…",
+      "passwordToggleShow": "Mostrar contraseña",
+      "passwordToggleHide": "Ocultar contraseña",
+      "submit": "Iniciar sesión",
+      "submitting": "Iniciando…",
+      "forgot": "¿Olvidó su contraseña?",
+      "orWith": "o ingresar con",
+      "googleButton": "Iniciar sesión con Google",
+      "googleSoon": "Próximamente",
+      "createAccount": "Crear una cuenta",
+      "errorInvalidCredentials": "Email o contraseña incorrectos.",
+      "errorEmailNotConfirmed": "Verificá tu email antes de iniciar sesión.",
+      "errorExpired": "El link expiró o ya fue usado. Intentá de nuevo.",
+      "errorGeneric": "No pudimos iniciar sesión. Intentá de nuevo."
+    },
+    "register": {
+      "title": "Crear una cuenta",
+      "fullNameLabel": "Nombre completo",
+      "fullNamePlaceholder": "Escriba aquí…",
+      "phoneLabel": "Teléfono",
+      "phonePlaceholder": "+34 600 000 000",
+      "countryLabel": "País",
+      "countryPlaceholder": "Elegí un país",
+      "cityLabel": "Ciudad",
+      "cityPlaceholder": "Elegí una ciudad",
+      "cityEmptyHint": "No hay ciudades disponibles en este país.",
+      "emailLabel": "Dirección de correo electrónico",
+      "emailPlaceholder": "Escriba aquí…",
+      "passwordLabel": "Contraseña",
+      "passwordPlaceholder": "Escriba aquí…",
+      "passwordHint": "Mínimo 8 caracteres.",
+      "submit": "Crear cuenta",
+      "submitting": "Creando…",
+      "backToLogin": "Ya tengo cuenta",
+      "successTitle": "Revisá tu email",
+      "successBody": "Te enviamos un enlace de confirmación a {email}. Hacé click ahí para activar tu cuenta.",
+      "successCta": "Volver a iniciar sesión",
+      "errorEmailRegistered": "Ese email ya tiene una cuenta. Probá iniciar sesión.",
+      "errorWeakPassword": "La contraseña no cumple los requisitos mínimos.",
+      "errorInvalidEmail": "Email inválido.",
+      "errorGeneric": "No pudimos crear la cuenta. Intentá de nuevo."
+    },
+    "forgot": {
+      "title": "Recuperar contraseña",
+      "body": "Ingresá tu email y te enviaremos un link para restablecerla.",
+      "emailLabel": "Dirección de correo electrónico",
+      "emailPlaceholder": "Escriba aquí…",
+      "submit": "Enviar link",
+      "submitting": "Enviando…",
+      "sentTitle": "Revisá tu email",
+      "sentBody": "Si esa dirección está registrada, te enviamos un link para restablecer la contraseña.",
+      "backToLogin": "Volver a iniciar sesión"
+    },
+    "reset": {
+      "title": "Nueva contraseña",
+      "body": "Elegí tu nueva contraseña.",
+      "passwordLabel": "Nueva contraseña",
+      "passwordPlaceholder": "Escriba aquí…",
+      "passwordHint": "Mínimo 8 caracteres.",
+      "confirmLabel": "Confirmar contraseña",
+      "confirmPlaceholder": "Escriba aquí…",
+      "submit": "Guardar nueva contraseña",
+      "submitting": "Guardando…",
+      "successTitle": "Listo",
+      "successBody": "Tu contraseña fue actualizada.",
+      "errorMismatch": "Las contraseñas no coinciden.",
+      "errorWeakPassword": "La contraseña no cumple los requisitos mínimos.",
+      "errorNoSession": "El link expiró o ya fue usado. Pedí uno nuevo.",
+      "errorCodeAlreadyUsed": "Este link ya fue abierto antes. Si no fuiste vos, pedí uno nuevo.",
+      "errorGeneric": "No pudimos actualizar la contraseña. Intentá de nuevo."
+    },
+    "callback": {
+      "expiredTitle": "Link expirado",
+      "expiredBody": "El link expiró o ya fue usado.",
+      "expiredCta": "Volver a intentar"
+    },
+    "account": {
+      "welcome": "Bienvenido, {name}",
+      "placeholder": "Tu zona personal estará disponible pronto."
+    }
   }
 }
