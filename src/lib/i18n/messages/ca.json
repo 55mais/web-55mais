@@ -1640,6 +1640,8 @@
       "passwordLabel": "Contrasenya",
       "passwordPlaceholder": "Escriu aquí…",
       "passwordHint": "Mínim 8 caràcters.",
+      "passwordToggleShow": "Mostrar contrasenya",
+      "passwordToggleHide": "Amagar contrasenya",
       "submit": "Crear compte",
       "submitting": "Creant…",
       "backToLogin": "Ja tinc un compte",

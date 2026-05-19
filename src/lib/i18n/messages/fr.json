@@ -1640,6 +1640,8 @@
       "passwordLabel": "Mot de passe",
       "passwordPlaceholder": "Saisissez ici…",
       "passwordHint": "Au moins 8 caractères.",
+      "passwordToggleShow": "Afficher le mot de passe",
+      "passwordToggleHide": "Masquer le mot de passe",
       "submit": "Créer le compte",
       "submitting": "Création…",
       "backToLogin": "J’ai déjà un compte",

@@ -1640,6 +1640,8 @@
       "passwordLabel": "Contraseña",
       "passwordPlaceholder": "Escriba aquí…",
       "passwordHint": "Mínimo 8 caracteres.",
+      "passwordToggleShow": "Mostrar contraseña",
+      "passwordToggleHide": "Ocultar contraseña",
       "submit": "Crear cuenta",
       "submitting": "Creando…",
       "backToLogin": "Ya tengo cuenta",
