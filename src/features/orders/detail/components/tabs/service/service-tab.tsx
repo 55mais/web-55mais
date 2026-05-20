@@ -86,7 +86,12 @@ export function ServiceTab({
         {...wire('serviceAnswers')}
         data={data.serviceAnswers}
       />
-      <RecurrenceSection {...common} {...wire('recurrence')} data={data.recurrence} />
+      <RecurrenceSection
+        {...common}
+        {...wire('recurrence')}
+        series={data.series}
+        appointmentDate={data.appointment_date}
+      />
       <NotesSection {...common} {...wire('notesData')} data={data.notesData} />
     </div>
   );

@@ -20,22 +20,42 @@ type Props = {
   orderId: string;
   status: OrderStatus;
   statusLabels: OrderStatusLabels;
+  hasSeries: boolean;
+  seriesActive: boolean;
   hints: HeaderHints;
   onStatusChanged: () => void;
+  /** Invoked when the user picks "completado" — the parent owns the
+   *  confirmation dialog + RPC call so the series-aware completion path
+   *  always goes through the same handler. */
+  onCompleteRequested: () => void;
 };
 
 export function OrderStatusSelect({
   orderId,
   status,
   statusLabels,
+  hasSeries,
+  seriesActive,
   hints,
   onStatusChanged,
+  onCompleteRequested,
 }: Props) {
   const [isPending, startTransition] = useTransition();
 
   const handleChange = (next: string | null) => {
     if (!next || next === status) return;
     const nextStatus = next as OrderStatus;
+    if (nextStatus === 'completado') {
+      // Series and non-series both route through the parent-owned dialog +
+      // complete_order_and_advance RPC. The RPC handles non-series orders
+      // by simply marking them completed (advanced=false).
+      if (hasSeries && !seriesActive) {
+        toast.error(hints.completeOccurrenceError);
+        return;
+      }
+      onCompleteRequested();
+      return;
+    }
     startTransition(async () => {
       const res = await updateOrderStatus({ orderId, status: nextStatus });
       if ('error' in res) {

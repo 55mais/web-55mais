@@ -8,6 +8,8 @@ import type {
   OrderClientSummary,
   OrderDetail,
   OrderPaymentStatus,
+  OrderSeriesStatus,
+  OrderSeriesSummary,
   OrderTagOption,
   StaffMemberSummary,
 } from '../types';
@@ -42,6 +44,24 @@ type ProfileRow = {
   phone: string | null;
 } | null;
 
+type SeriesRow = {
+  id: string;
+  status: string;
+  frequency: string;
+  weekdays: number[] | null;
+  day_of_month: number | null;
+  repeat_every: number;
+  time_start: string;
+  time_end: string | null;
+  hours_per_session: number | string | null;
+  timezone: string;
+  start_date: string;
+  last_appointment_at: string | null;
+  total_occurrences: number;
+  occurrences_completed: number;
+  occurrences_cancelled: number;
+} | null;
+
 const DEFAULT_DURATION_MIN = 60;
 
 export function composeOrderDetail(args: {
@@ -51,9 +71,11 @@ export function composeOrderDetail(args: {
   staffMember: ProfileRow;
   tags: OrderTagOption[];
   scheduleSummary: string;
+  seriesRow: SeriesRow;
+  sequenceNo: number | null;
   locale: string;
 }): OrderDetail {
-  const { order, service, client, staffMember, tags, scheduleSummary, locale } = args;
+  const { order, service, client, staffMember, tags, scheduleSummary, seriesRow, sequenceNo, locale } = args;
 
   const startIso = order.appointment_date;
   const endIso = startIso ? addMinutesToIso(startIso, DEFAULT_DURATION_MIN) : null;
@@ -85,6 +107,30 @@ export function composeOrderDetail(args: {
     client: composeClient(client, order.client_id),
     tags,
     talents_needed: order.talents_needed ?? 1,
+    series: composeSeries(seriesRow, sequenceNo),
+  };
+}
+
+function composeSeries(row: SeriesRow, sequenceNo: number | null): OrderSeriesSummary | null {
+  if (!row || sequenceNo === null) return null;
+  return {
+    id: row.id,
+    sequence_no: sequenceNo,
+    total_occurrences: row.total_occurrences,
+    occurrences_completed: row.occurrences_completed,
+    occurrences_cancelled: row.occurrences_cancelled,
+    status: row.status as OrderSeriesStatus,
+    frequency: row.frequency as 'weekly' | 'monthly',
+    weekdays: row.weekdays,
+    day_of_month: row.day_of_month,
+    repeat_every: row.repeat_every,
+    time_start: row.time_start,
+    time_end: row.time_end,
+    hours_per_session:
+      row.hours_per_session === null ? null : Number(row.hours_per_session),
+    start_date: row.start_date,
+    timezone: row.timezone,
+    last_appointment_at: row.last_appointment_at,
   };
 }
 

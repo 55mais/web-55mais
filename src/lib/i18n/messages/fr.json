@@ -1110,7 +1110,21 @@
       "statusUpdateSuccess": "Statut mis à jour",
       "statusUpdateError": "Impossible de mettre à jour le statut",
       "tagsUpdateSuccess": "Étiquettes mises à jour",
-      "tagsUpdateError": "Impossible de mettre à jour les étiquettes"
+      "tagsUpdateError": "Impossible de mettre à jour les étiquettes",
+      "seriesBadge": "Séance {current} sur {total}",
+      "seriesStatusActive": "Série active",
+      "seriesStatusCompleted": "Série terminée",
+      "seriesStatusCancelled": "Série annulée",
+      "completeOccurrenceButton": "Terminer la séance",
+      "completeOccurrenceConfirmTitle": "Terminer la séance",
+      "completeOccurrenceConfirmBody": "Cette action marquera la commande comme terminée. Continuer ?",
+      "completeOccurrenceConfirmSeriesBody": "Ceci terminera la séance actuelle et créera automatiquement la suivante de la série. Continuer ?",
+      "completeOccurrenceConfirmYes": "Terminer",
+      "completeOccurrenceConfirmCancel": "Retour",
+      "completeOccurrenceSuccess": "Séance terminée",
+      "completeOccurrenceAdvanced": "Séance terminée. Prochaine séance créée : {orderNumber}",
+      "completeOccurrenceSeriesClosed": "Série terminée : {completed} sur {total} séances",
+      "completeOccurrenceError": "Impossible de terminer la séance"
     },
     "service": {
       "section": {
@@ -1165,7 +1179,22 @@
         "Sa"
       ],
       "empty": "Aucune donnée",
-      "notProvided": "Non renseigné"
+      "notProvided": "Non renseigné",
+      "seriesFrequencyLabel": "Fréquence",
+      "seriesFrequencyWeekly": "Hebdomadaire",
+      "seriesFrequencyMonthly": "Mensuelle",
+      "seriesDayOfMonthLabel": "Jour du mois",
+      "seriesTimeStartLabel": "Heure de début",
+      "seriesTimeEndLabel": "Heure de fin",
+      "seriesTotalOccurrencesLabel": "Séances au total",
+      "seriesOccurrencesCompletedLabel": "Séances terminées",
+      "seriesOccurrencesCancelledLabel": "Séances annulées",
+      "seriesStatusLabel": "État de la série",
+      "seriesStatusActive": "Active",
+      "seriesStatusCompleted": "Terminée",
+      "seriesStatusCancelled": "Annulée",
+      "seriesSequence": "Séance {current}/{total}",
+      "appointmentDateLabel": "Date du rendez-vous"
     },
     "specialists": {
       "columnName": "Nom",

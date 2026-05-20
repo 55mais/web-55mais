@@ -27,6 +27,8 @@ const baseArgs = {
   staffMember: null,
   tags: [],
   scheduleSummary: 'Sesión única',
+  seriesRow: null,
+  sequenceNo: null,
   locale: 'es',
 };
 

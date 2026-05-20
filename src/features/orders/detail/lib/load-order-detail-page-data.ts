@@ -166,6 +166,25 @@ function readHeader(t: T): HeaderHints {
     statusUpdateError: t('header.statusUpdateError'),
     tagsUpdateSuccess: t('header.tagsUpdateSuccess'),
     tagsUpdateError: t('header.tagsUpdateError'),
+    seriesBadgeTemplate: (current, total) =>
+      t('header.seriesBadge', { current, total }),
+    seriesStatusLabels: {
+      active: t('header.seriesStatusActive'),
+      completed: t('header.seriesStatusCompleted'),
+      cancelled: t('header.seriesStatusCancelled'),
+    },
+    completeOccurrenceButton: t('header.completeOccurrenceButton'),
+    completeOccurrenceConfirmTitle: t('header.completeOccurrenceConfirmTitle'),
+    completeOccurrenceConfirmBody: t('header.completeOccurrenceConfirmBody'),
+    completeOccurrenceConfirmSeriesBody: t('header.completeOccurrenceConfirmSeriesBody'),
+    completeOccurrenceConfirmYes: t('header.completeOccurrenceConfirmYes'),
+    completeOccurrenceConfirmCancel: t('header.completeOccurrenceConfirmCancel'),
+    completeOccurrenceSuccess: t('header.completeOccurrenceSuccess'),
+    completeOccurrenceAdvancedToast: (orderNumber) =>
+      t('header.completeOccurrenceAdvanced', { orderNumber }),
+    completeOccurrenceSeriesClosedToast: (completed, total) =>
+      t('header.completeOccurrenceSeriesClosed', { completed, total }),
+    completeOccurrenceError: t('header.completeOccurrenceError'),
   };
 }
 
@@ -222,6 +241,22 @@ function readService(t: T): ServiceTabHints {
     weekdayShort,
     empty: t('service.empty'),
     notProvided: t('service.notProvided'),
+    seriesFrequencyLabel: t('service.seriesFrequencyLabel'),
+    seriesFrequencyWeekly: t('service.seriesFrequencyWeekly'),
+    seriesFrequencyMonthly: t('service.seriesFrequencyMonthly'),
+    seriesDayOfMonthLabel: t('service.seriesDayOfMonthLabel'),
+    seriesTimeStartLabel: t('service.seriesTimeStartLabel'),
+    seriesTimeEndLabel: t('service.seriesTimeEndLabel'),
+    seriesTotalOccurrencesLabel: t('service.seriesTotalOccurrencesLabel'),
+    seriesOccurrencesCompletedLabel: t('service.seriesOccurrencesCompletedLabel'),
+    seriesOccurrencesCancelledLabel: t('service.seriesOccurrencesCancelledLabel'),
+    seriesStatusLabel: t('service.seriesStatusLabel'),
+    seriesStatusActive: t('service.seriesStatusActive'),
+    seriesStatusCompleted: t('service.seriesStatusCompleted'),
+    seriesStatusCancelled: t('service.seriesStatusCancelled'),
+    seriesSequenceTemplate: (current, total) =>
+      t('service.seriesSequence', { current, total }),
+    appointmentDateLabel: t('service.appointmentDateLabel'),
   };
 }
 

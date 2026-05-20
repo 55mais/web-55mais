@@ -1,196 +1,154 @@
 'use client';
 
-import { useEffect, useMemo, useState, useTransition } from 'react';
-import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { saveOrderRecurrence } from '../../../actions/save-order-recurrence';
-import type { RecurrenceValues, ServiceTabContext, ServiceTabHints } from '../../../types';
-import { RECURRENCE_TYPES } from '../../../types';
-import type { OrderScheduleType } from '../../../../types';
+import { Badge } from '@/components/ui/badge';
+import type { OrderSeriesSummary, ServiceTabHints } from '../../../types';
 import { Field, SectionShell } from './service-tab';
 
 type Props = {
   orderId: string;
-  data: RecurrenceValues;
-  context: ServiceTabContext;
+  series: OrderSeriesSummary | null;
+  appointmentDate: string | null;
   hints: ServiceTabHints;
   locale: string;
   open: boolean;
   onToggle: () => void;
+  // Kept to maintain ServiceTab section signature; this section no longer
+  // dirties (read-only) or saves, so these are no-ops here.
   onSaved: () => void;
   onDirtyChange: (dirty: boolean) => void;
   readOnly?: boolean;
 };
 
-function buildSummary(form: RecurrenceValues, hints: ServiceTabHints): string {
-  const typeLabel = hints.scheduleTypeLabels[form.schedule_type];
-  const days = form.weekdays.length > 0
-    ? form.weekdays.slice().sort((a, b) => a - b).map((d) => hints.weekdayShort[d] ?? String(d)).join(', ')
-    : hints.notProvided;
-  const start = form.start_date ?? hints.notProvided;
-  const end = form.end_date ?? hints.notProvided;
-  return `${typeLabel} · ${hints.repeatEveryLabel}: ${form.repeat_every} · ${hints.weekdaysLabel}: ${days} · ${start} → ${end}`;
+function formatWeekdays(weekdays: number[] | null, labels: string[]): string | null {
+  if (!weekdays || weekdays.length === 0) return null;
+  return weekdays
+    .slice()
+    .sort((a, b) => a - b)
+    .map((d) => labels[d] ?? String(d))
+    .join(', ');
 }
 
-export function RecurrenceSection({ orderId, data, hints, open, onToggle, onSaved, onDirtyChange, readOnly = false }: Props) {
-  const [editing, setEditing] = useState(false);
-  const [form, setForm] = useState<RecurrenceValues>(data);
-  const [isPending, startTransition] = useTransition();
+function statusLabel(status: OrderSeriesSummary['status'], hints: ServiceTabHints): string {
+  if (status === 'active') return hints.seriesStatusActive;
+  if (status === 'completed') return hints.seriesStatusCompleted;
+  return hints.seriesStatusCancelled;
+}
 
-  useEffect(() => { setForm(data); }, [data]);
-  const dirty = useMemo(() => editing && JSON.stringify(form) !== JSON.stringify(data), [editing, form, data]);
-  useEffect(() => { onDirtyChange(dirty); }, [dirty, onDirtyChange]);
+export function RecurrenceSection({
+  series,
+  appointmentDate,
+  hints,
+  open,
+  onToggle,
+  readOnly = false,
+}: Props) {
+  const previewText = series
+    ? `${hints.seriesSequenceTemplate(series.sequence_no, series.total_occurrences)} · ${statusLabel(series.status, hints)}`
+    : (appointmentDate ?? hints.notProvided);
 
-  const scheduleLabelMap = useMemo(
-    () => new Map(RECURRENCE_TYPES.map((t) => [t, hints.scheduleTypeLabels[t]])),
-    [hints.scheduleTypeLabels],
-  );
-
-  const previewText = `${hints.scheduleTypeLabels[data.schedule_type]} · ${data.repeat_every}`;
-
-  const handleSave = () => {
-    startTransition(async () => {
-      const res = await saveOrderRecurrence({ orderId, ...form });
-      if ('error' in res) { toast.error(res.error.message || hints.section.saveError); return; }
-      toast.success(hints.section.saveSuccess);
-      setEditing(false); onDirtyChange(false); onSaved();
-    });
-  };
-
-  const setField = <K extends keyof RecurrenceValues>(k: K, v: RecurrenceValues[K]) =>
-    setForm((s) => ({ ...s, [k]: v }));
-
-  const toggleWeekday = (idx: number) => setForm((s) => ({
-    ...s,
-    weekdays: s.weekdays.includes(idx)
-      ? s.weekdays.filter((d) => d !== idx)
-      : [...s.weekdays, idx].sort((a, b) => a - b),
-  }));
-
-  const weekdaysValue = data.weekdays.length > 0
-    ? data.weekdays.map((d) => hints.weekdayShort[d] ?? String(d)).join(', ')
-    : null;
-  const hpsValue = data.hours_per_session !== null ? String(data.hours_per_session) : null;
-
-  const readMode = (
+  const readMode = series ? (
     <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-      <Field label={hints.scheduleTypeLabel} value={hints.scheduleTypeLabels[data.schedule_type]} fallback={hints.notProvided} />
-      <Field label={hints.repeatEveryLabel} value={String(data.repeat_every)} fallback={hints.notProvided} />
-      <Field label={hints.weekdaysLabel} value={weekdaysValue} fallback={hints.notProvided} />
-      <Field label={hints.startDateLabel} value={data.start_date} fallback={hints.notProvided} />
-      <Field label={hints.endDateLabel} value={data.end_date} fallback={hints.notProvided} />
-      <Field label={hints.timeWindowStartLabel} value={data.time_window_start} fallback={hints.notProvided} />
-      <Field label={hints.timeWindowEndLabel} value={data.time_window_end} fallback={hints.notProvided} />
-      {data.schedule_type !== 'once' && (
-        <Field label={hints.hoursPerSessionLabel} value={hpsValue} fallback={hints.notProvided} />
+      <Field
+        label={hints.seriesFrequencyLabel}
+        value={
+          series.frequency === 'weekly'
+            ? hints.seriesFrequencyWeekly
+            : hints.seriesFrequencyMonthly
+        }
+        fallback={hints.notProvided}
+      />
+      <Field
+        label={hints.repeatEveryLabel}
+        value={String(series.repeat_every)}
+        fallback={hints.notProvided}
+      />
+      {series.frequency === 'weekly' && (
+        <Field
+          label={hints.weekdaysLabel}
+          value={formatWeekdays(series.weekdays, hints.weekdayShort)}
+          fallback={hints.notProvided}
+        />
       )}
-      <div className="sm:col-span-2 flex flex-col">
-        <dt className="text-xs text-muted-foreground">{hints.recurrenceSummaryLabel}</dt>
-        <dd className="text-sm whitespace-pre-wrap">{buildSummary(data, hints)}</dd>
+      {series.frequency === 'monthly' && (
+        <Field
+          label={hints.seriesDayOfMonthLabel}
+          value={series.day_of_month !== null ? String(series.day_of_month) : null}
+          fallback={hints.notProvided}
+        />
+      )}
+      <Field
+        label={hints.startDateLabel}
+        value={series.start_date}
+        fallback={hints.notProvided}
+      />
+      <Field
+        label={hints.seriesTimeStartLabel}
+        value={series.time_start ? series.time_start.slice(0, 5) : null}
+        fallback={hints.notProvided}
+      />
+      <Field
+        label={hints.seriesTimeEndLabel}
+        value={series.time_end ? series.time_end.slice(0, 5) : null}
+        fallback={hints.notProvided}
+      />
+      <Field
+        label={hints.seriesTotalOccurrencesLabel}
+        value={String(series.total_occurrences)}
+        fallback={hints.notProvided}
+      />
+      <Field
+        label={hints.seriesOccurrencesCompletedLabel}
+        value={String(series.occurrences_completed)}
+        fallback={hints.notProvided}
+      />
+      <Field
+        label={hints.seriesOccurrencesCancelledLabel}
+        value={String(series.occurrences_cancelled)}
+        fallback={hints.notProvided}
+      />
+      <div className="flex flex-col">
+        <dt className="text-xs text-muted-foreground">{hints.seriesStatusLabel}</dt>
+        <dd className="text-sm">
+          <Badge
+            variant={
+              series.status === 'cancelled'
+                ? 'destructive'
+                : series.status === 'completed'
+                  ? 'outline'
+                  : 'secondary'
+            }
+          >
+            {statusLabel(series.status, hints)}
+          </Badge>
+        </dd>
       </div>
     </dl>
-  );
-
-  const dateField = (id: string, label: string, type: 'date' | 'time', value: string | null, key: keyof RecurrenceValues) => (
-    <div className="flex flex-col gap-1.5">
-      <Label htmlFor={id}>{label}</Label>
-      <Input
-        id={id}
-        type={type}
-        value={value ?? ''}
-        onChange={(e) => setField(key, (e.target.value || null) as RecurrenceValues[typeof key])}
+  ) : (
+    <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <Field
+        label={hints.appointmentDateLabel}
+        value={appointmentDate}
+        fallback={hints.notProvided}
       />
-    </div>
-  );
-
-  const editMode = (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-      <div className="flex flex-col gap-1.5">
-        <Label>{hints.scheduleTypeLabel}</Label>
-        <Select
-          value={form.schedule_type}
-          onValueChange={(v) => setField('schedule_type', (v ?? 'once') as OrderScheduleType)}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder={hints.notProvided}>
-              {(v) => (!v ? hints.notProvided : scheduleLabelMap.get(v as OrderScheduleType) ?? hints.notProvided)}
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            {RECURRENCE_TYPES.map((t) => (
-              <SelectItem key={t} value={t}>{hints.scheduleTypeLabels[t]}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="flex flex-col gap-1.5">
-        <Label htmlFor="rec-repeat">{hints.repeatEveryLabel}</Label>
-        <Input
-          id="rec-repeat" type="number" min={1} max={365} value={form.repeat_every}
-          onChange={(e) => {
-            const n = Number(e.target.value);
-            setField('repeat_every', Number.isFinite(n) && n >= 1 ? Math.min(365, n) : 1);
-          }}
-        />
-      </div>
-
-      <div className="flex flex-col gap-1.5 sm:col-span-2">
-        <Label>{hints.weekdaysLabel}</Label>
-        <div className="flex flex-wrap gap-2">
-          {hints.weekdayShort.map((label, idx) => (
-            <Button
-              key={idx} type="button" size="sm"
-              variant={form.weekdays.includes(idx) ? 'default' : 'outline'}
-              onClick={() => toggleWeekday(idx)}
-            >
-              {label}
-            </Button>
-          ))}
-        </div>
-      </div>
-
-      {dateField('rec-start', hints.startDateLabel, 'date', form.start_date, 'start_date')}
-      {dateField('rec-end', hints.endDateLabel, 'date', form.end_date, 'end_date')}
-      {dateField('rec-tws', hints.timeWindowStartLabel, 'time', form.time_window_start, 'time_window_start')}
-      {dateField('rec-twe', hints.timeWindowEndLabel, 'time', form.time_window_end, 'time_window_end')}
-
-      {form.schedule_type !== 'once' && (
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="rec-hps">{hints.hoursPerSessionLabel}</Label>
-          <Input
-            id="rec-hps" type="number" min={0} max={24} step={0.5}
-            value={form.hours_per_session ?? ''}
-            onChange={(e) => {
-              const v = e.target.value;
-              if (v === '') { setField('hours_per_session', null); return; }
-              const n = Number(v);
-              setField('hours_per_session', Number.isFinite(n) ? n : null);
-            }}
-          />
-        </div>
-      )}
-
-      <div className="sm:col-span-2 flex flex-col">
-        <dt className="text-xs text-muted-foreground">{hints.recurrenceSummaryLabel}</dt>
-        <dd className="text-sm whitespace-pre-wrap">{buildSummary(form, hints)}</dd>
-      </div>
-    </div>
+    </dl>
   );
 
   return (
     <SectionShell
       title={hints.recurrenceTitle}
-      open={open} onToggle={onToggle} editing={editing}
-      onStartEdit={() => { setForm(data); setEditing(true); }}
-      onCancelEdit={() => { setForm(data); setEditing(false); onDirtyChange(false); }}
-      onSave={handleSave} saving={isPending}
+      open={open}
+      onToggle={onToggle}
+      editing={false}
+      onStartEdit={() => {}}
+      onCancelEdit={() => {}}
+      onSave={() => {}}
+      saving={false}
+      canEdit={false}
       readOnly={readOnly}
-      sectionHints={hints.section} previewText={previewText}
-      readMode={readMode} editMode={editMode}
+      sectionHints={hints.section}
+      previewText={previewText}
+      readMode={readMode}
+      editMode={null}
     />
   );
 }

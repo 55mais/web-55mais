@@ -40,6 +40,27 @@ export type StaffMemberSummary = {
   full_name: string | null;
 };
 
+export type OrderSeriesStatus = 'active' | 'completed' | 'cancelled';
+
+export type OrderSeriesSummary = {
+  id: string;
+  sequence_no: number;            // 1..N — this order's position
+  total_occurrences: number;
+  occurrences_completed: number;
+  occurrences_cancelled: number;
+  status: OrderSeriesStatus;
+  frequency: 'weekly' | 'monthly';
+  weekdays: number[] | null;      // 0=Sun..6=Sat (DB convention)
+  day_of_month: number | null;
+  repeat_every: number;
+  time_start: string;             // HH:MM:SS
+  time_end: string | null;
+  hours_per_session: number | null;
+  start_date: string;             // ISO date of first slot
+  timezone: string;
+  last_appointment_at: string | null;
+};
+
 export type OrderDetail = {
   id: string;
   order_number: number;
@@ -66,6 +87,7 @@ export type OrderDetail = {
   client: OrderClientSummary;
   tags: OrderTagOption[];         // Phase 1 mock
   talents_needed: number;
+  series: OrderSeriesSummary | null;
 };
 
 // ── Tab Servicio ────────────────────────────────────────────
@@ -116,6 +138,8 @@ export type ServiceTabData = {
   serviceAnswers: ServiceAnswersValues;
   recurrence: RecurrenceValues;
   notesData: NotesValues;
+  series: OrderSeriesSummary | null;
+  appointment_date: string | null;
 };
 
 // Geo refs (used by service tab context + talent search filters).
@@ -343,6 +367,19 @@ export type HeaderHints = {
   statusUpdateError: string;
   tagsUpdateSuccess: string;
   tagsUpdateError: string;
+  // Series / completion
+  seriesBadgeTemplate: (current: number, total: number) => string; // "Sesión 3 de 10"
+  seriesStatusLabels: Record<OrderSeriesStatus, string>;
+  completeOccurrenceButton: string;
+  completeOccurrenceConfirmTitle: string;
+  completeOccurrenceConfirmBody: string;          // generic body
+  completeOccurrenceConfirmSeriesBody: string;    // body when series → will materialize next
+  completeOccurrenceConfirmYes: string;
+  completeOccurrenceConfirmCancel: string;
+  completeOccurrenceSuccess: string;              // non-series success
+  completeOccurrenceAdvancedToast: (orderNumber: string) => string; // series advanced
+  completeOccurrenceSeriesClosedToast: (completed: number, total: number) => string;
+  completeOccurrenceError: string;
 };
 
 export type SectionHints = {
@@ -389,6 +426,23 @@ export type ServiceTabHints = {
   // Empty / placeholder
   empty: string;
   notProvided: string;
+  // Series read-only block (orders linked to order_series)
+  seriesFrequencyLabel: string;
+  seriesFrequencyWeekly: string;
+  seriesFrequencyMonthly: string;
+  seriesDayOfMonthLabel: string;
+  seriesTimeStartLabel: string;
+  seriesTimeEndLabel: string;
+  seriesTotalOccurrencesLabel: string;
+  seriesOccurrencesCompletedLabel: string;
+  seriesOccurrencesCancelledLabel: string;
+  seriesStatusLabel: string;
+  seriesStatusActive: string;
+  seriesStatusCompleted: string;
+  seriesStatusCancelled: string;
+  seriesSequenceTemplate: (current: number, total: number) => string;
+  // Single-occurrence orders (no series)
+  appointmentDateLabel: string;
 };
 
 export type SpecialistsTabHints = {

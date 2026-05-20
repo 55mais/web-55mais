@@ -5,7 +5,12 @@ import { localizedField } from '@/shared/lib/i18n/localize';
 import type { I18nRecord } from '@/shared/lib/json';
 import type { AssignedSubtypeGroup, Question } from '@/shared/lib/questions/types';
 import type { OrderScheduleType } from '../../types';
-import type { ServiceTabContext, ServiceTabData } from '../types';
+import type {
+  OrderSeriesStatus,
+  OrderSeriesSummary,
+  ServiceTabContext,
+  ServiceTabData,
+} from '../types';
 
 type Result = {
   data: ServiceTabData;
@@ -21,11 +26,21 @@ export async function getOrderServiceData(
   const { data: order } = await supabase
     .from('orders')
     .select(
-      'id, service_id, preferred_language, service_address, service_city_id, service_postal_code, schedule_type, notes, talents_needed, form_data, appointment_date',
+      'id, service_id, preferred_language, service_address, service_city_id, service_postal_code, schedule_type, notes, talents_needed, form_data, appointment_date, series_id, sequence_no',
     )
     .eq('id', orderId)
     .maybeSingle();
   if (!order) return null;
+
+  const seriesRowRes = order.series_id
+    ? await supabase
+        .from('order_series')
+        .select(
+          'id, status, frequency, weekdays, day_of_month, repeat_every, time_start, time_end, hours_per_session, timezone, start_date, last_appointment_at, total_occurrences, occurrences_completed, occurrences_cancelled',
+        )
+        .eq('id', order.series_id)
+        .maybeSingle()
+    : { data: null };
 
   const [
     serviceRes,
@@ -105,6 +120,8 @@ export async function getOrderServiceData(
       notes: order.notes ?? null,
       talents_needed: order.talents_needed ?? 1,
     },
+    series: composeSeriesSummary(seriesRowRes.data, order.sequence_no),
+    appointment_date: order.appointment_date,
   };
 
   const assignedGroups: AssignedSubtypeGroup[] = ((groupAssignmentsRes.data ?? []) as unknown as Array<{
@@ -159,6 +176,46 @@ export async function getOrderServiceData(
   };
 
   return { data, context };
+}
+
+type SeriesRow = {
+  id: string;
+  status: string;
+  frequency: string;
+  weekdays: number[] | null;
+  day_of_month: number | null;
+  repeat_every: number;
+  time_start: string;
+  time_end: string | null;
+  hours_per_session: number | string | null;
+  timezone: string;
+  start_date: string;
+  last_appointment_at: string | null;
+  total_occurrences: number;
+  occurrences_completed: number;
+  occurrences_cancelled: number;
+} | null;
+
+function composeSeriesSummary(row: SeriesRow, sequenceNo: number | null): OrderSeriesSummary | null {
+  if (!row || sequenceNo === null) return null;
+  return {
+    id: row.id,
+    sequence_no: sequenceNo,
+    total_occurrences: row.total_occurrences,
+    occurrences_completed: row.occurrences_completed,
+    occurrences_cancelled: row.occurrences_cancelled,
+    status: row.status as OrderSeriesStatus,
+    frequency: row.frequency as 'weekly' | 'monthly',
+    weekdays: row.weekdays,
+    day_of_month: row.day_of_month,
+    repeat_every: row.repeat_every,
+    time_start: row.time_start,
+    time_end: row.time_end,
+    hours_per_session: row.hours_per_session === null ? null : Number(row.hours_per_session),
+    start_date: row.start_date,
+    timezone: row.timezone,
+    last_appointment_at: row.last_appointment_at,
+  };
 }
 
 function extractTranslations(i18n: I18nRecord, field: string): Record<string, string> {

@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
+import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatDateInTz } from '@/shared/lib/datetime';
+import { completeOrderOccurrence } from '@/features/orders/detail/actions/complete-order-occurrence';
 import type {
   HeaderHints,
   OrderDetail,
@@ -11,8 +13,11 @@ import type {
 } from '@/features/orders/detail/types';
 import { CancelOrderModal } from './cancel-order-modal';
 import { ClientSummary } from './client-summary';
+import { CompleteOccurrenceDialog } from './complete-occurrence-dialog';
 import { OrderStatusSelect } from './order-status-select';
 import { OrderTagsDisplay } from './order-tags-display';
+
+const COMPLETABLE_STATUSES = new Set(['pendiente', 'asignado', 'confirmado']);
 
 type Props = {
   order: OrderDetail;
@@ -94,6 +99,38 @@ export function OrderHeader({
   readOnly = false,
 }: Props) {
   const [cancelOpen, setCancelOpen] = useState(false);
+  const [completeOpen, setCompleteOpen] = useState(false);
+  const [isCompleting, startCompleteTransition] = useTransition();
+
+  const series = order.series;
+  const seriesActive = series !== null && series.status === 'active';
+  const canComplete =
+    !readOnly && COMPLETABLE_STATUSES.has(order.status) && (series === null || seriesActive);
+
+  const handleConfirmComplete = () => {
+    startCompleteTransition(async () => {
+      const res = await completeOrderOccurrence({ orderId: order.id });
+      setCompleteOpen(false);
+      if ('error' in res) {
+        toast.error(res.error.message || hints.completeOccurrenceError);
+        return;
+      }
+      const { advanced, new_order_number, series_closed } = res.data;
+      if (series_closed === 'completed' && series) {
+        toast.success(
+          hints.completeOccurrenceSeriesClosedToast(
+            series.occurrences_completed + 1,
+            series.total_occurrences,
+          ),
+        );
+      } else if (advanced && new_order_number !== null) {
+        toast.success(hints.completeOccurrenceAdvancedToast(`#${new_order_number}`));
+      } else {
+        toast.success(hints.completeOccurrenceSuccess);
+      }
+      onStatusChanged();
+    });
+  };
 
   const duration = formatDuration(order.estimated_duration_minutes);
   // appointment_date renders in the service TZ (cross-midnight cases would
@@ -119,9 +156,32 @@ export function OrderHeader({
             <span className="text-muted-foreground"> · </span>
             <span>{order.service_name ?? '—'}</span>
           </h1>
+          {series && (
+            <div className="flex flex-wrap items-center gap-2 pt-1">
+              <Badge variant="secondary">
+                {hints.seriesBadgeTemplate(series.sequence_no, series.total_occurrences)}
+              </Badge>
+              {series.status !== 'active' && (
+                <Badge
+                  variant={series.status === 'cancelled' ? 'destructive' : 'outline'}
+                >
+                  {hints.seriesStatusLabels[series.status]}
+                </Badge>
+              )}
+            </div>
+          )}
         </div>
         {!readOnly && (
-          <div className="flex shrink-0 items-start">
+          <div className="flex shrink-0 items-start gap-2">
+            {canComplete && (
+              <Button
+                variant="default"
+                onClick={() => setCompleteOpen(true)}
+                disabled={isCompleting}
+              >
+                {hints.completeOccurrenceButton}
+              </Button>
+            )}
             <Button
               variant="destructive"
               onClick={() => setCancelOpen(true)}
@@ -141,8 +201,11 @@ export function OrderHeader({
             orderId={order.id}
             status={order.status}
             statusLabels={hints.statusLabels}
+            hasSeries={series !== null}
+            seriesActive={seriesActive}
             hints={hints}
             onStatusChanged={onStatusChanged}
+            onCompleteRequested={() => setCompleteOpen(true)}
           />
         </div>
         <MetaItem label={hints.fieldPaymentStatus}>
@@ -202,6 +265,15 @@ export function OrderHeader({
         orderId={order.id}
         hints={hints}
         onCancelled={onCancelled}
+      />
+
+      <CompleteOccurrenceDialog
+        open={completeOpen}
+        onOpenChange={setCompleteOpen}
+        hasSeries={series !== null}
+        hints={hints}
+        loading={isCompleting}
+        onConfirm={handleConfirmComplete}
       />
     </div>
   );

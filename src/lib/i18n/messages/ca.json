@@ -1110,7 +1110,21 @@
       "statusUpdateSuccess": "Estat actualitzat",
       "statusUpdateError": "No s'ha pogut actualitzar l'estat",
       "tagsUpdateSuccess": "Etiquetes actualitzades",
-      "tagsUpdateError": "No s'han pogut actualitzar les etiquetes"
+      "tagsUpdateError": "No s'han pogut actualitzar les etiquetes",
+      "seriesBadge": "Sessió {current} de {total}",
+      "seriesStatusActive": "Sèrie activa",
+      "seriesStatusCompleted": "Sèrie completada",
+      "seriesStatusCancelled": "Sèrie cancel·lada",
+      "completeOccurrenceButton": "Completar sessió",
+      "completeOccurrenceConfirmTitle": "Completar sessió",
+      "completeOccurrenceConfirmBody": "Aquesta acció marcarà la comanda com a completada. Continuar?",
+      "completeOccurrenceConfirmSeriesBody": "Això completarà la sessió actual i crearà automàticament la propera de la sèrie. Continuar?",
+      "completeOccurrenceConfirmYes": "Completar",
+      "completeOccurrenceConfirmCancel": "Tornar",
+      "completeOccurrenceSuccess": "Sessió completada",
+      "completeOccurrenceAdvanced": "Sessió completada. Propera sessió creada: {orderNumber}",
+      "completeOccurrenceSeriesClosed": "Sèrie completada: {completed} de {total} sessions",
+      "completeOccurrenceError": "No s'ha pogut completar la sessió"
     },
     "service": {
       "section": {
@@ -1165,7 +1179,22 @@
         "Ds"
       ],
       "empty": "Sense dades",
-      "notProvided": "No informat"
+      "notProvided": "No informat",
+      "seriesFrequencyLabel": "Freqüència",
+      "seriesFrequencyWeekly": "Setmanal",
+      "seriesFrequencyMonthly": "Mensual",
+      "seriesDayOfMonthLabel": "Dia del mes",
+      "seriesTimeStartLabel": "Hora d'inici",
+      "seriesTimeEndLabel": "Hora de fi",
+      "seriesTotalOccurrencesLabel": "Sessions totals",
+      "seriesOccurrencesCompletedLabel": "Sessions completades",
+      "seriesOccurrencesCancelledLabel": "Sessions cancel·lades",
+      "seriesStatusLabel": "Estat de la sèrie",
+      "seriesStatusActive": "Activa",
+      "seriesStatusCompleted": "Completada",
+      "seriesStatusCancelled": "Cancel·lada",
+      "seriesSequence": "Sessió {current}/{total}",
+      "appointmentDateLabel": "Data de la cita"
     },
     "specialists": {
       "columnName": "Nom",

@@ -1110,7 +1110,21 @@
       "statusUpdateSuccess": "Status updated",
       "statusUpdateError": "Could not update status",
       "tagsUpdateSuccess": "Tags updated",
-      "tagsUpdateError": "Could not update tags"
+      "tagsUpdateError": "Could not update tags",
+      "seriesBadge": "Session {current} of {total}",
+      "seriesStatusActive": "Series active",
+      "seriesStatusCompleted": "Series completed",
+      "seriesStatusCancelled": "Series cancelled",
+      "completeOccurrenceButton": "Complete session",
+      "completeOccurrenceConfirmTitle": "Complete session",
+      "completeOccurrenceConfirmBody": "This will mark the order as completed. Continue?",
+      "completeOccurrenceConfirmSeriesBody": "This will complete the current session and automatically create the next one in the series. Continue?",
+      "completeOccurrenceConfirmYes": "Complete",
+      "completeOccurrenceConfirmCancel": "Back",
+      "completeOccurrenceSuccess": "Session completed",
+      "completeOccurrenceAdvanced": "Session completed. Next session created: {orderNumber}",
+      "completeOccurrenceSeriesClosed": "Series completed: {completed} of {total} sessions",
+      "completeOccurrenceError": "Could not complete the session"
     },
     "service": {
       "section": {
@@ -1165,7 +1179,22 @@
         "Sa"
       ],
       "empty": "No data",
-      "notProvided": "Not provided"
+      "notProvided": "Not provided",
+      "seriesFrequencyLabel": "Frequency",
+      "seriesFrequencyWeekly": "Weekly",
+      "seriesFrequencyMonthly": "Monthly",
+      "seriesDayOfMonthLabel": "Day of month",
+      "seriesTimeStartLabel": "Start time",
+      "seriesTimeEndLabel": "End time",
+      "seriesTotalOccurrencesLabel": "Total sessions",
+      "seriesOccurrencesCompletedLabel": "Sessions completed",
+      "seriesOccurrencesCancelledLabel": "Sessions cancelled",
+      "seriesStatusLabel": "Series status",
+      "seriesStatusActive": "Active",
+      "seriesStatusCompleted": "Completed",
+      "seriesStatusCancelled": "Cancelled",
+      "seriesSequence": "Session {current}/{total}",
+      "appointmentDateLabel": "Appointment date"
     },
     "specialists": {
       "columnName": "Name",
