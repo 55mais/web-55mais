@@ -49,6 +49,7 @@ Marketplace donde personas mayores de 55 años ofrecen servicios profesionales. 
 - **Tailwind v4 + shadcn base-nova:** shadcn@latest genera componentes para Tailwind v4 (`@base-ui/react`, no `@radix-ui/react`). CSS usa `@import "tailwindcss"` en vez de `@tailwind base/components/utilities`. No hay `tailwind.config.ts` — la config es vía CSS.
 - **Route groups no pueden tener page.tsx en la raíz:** Todas las route groups resuelven a `/{locale}/`, causando conflicto. Cada group necesita segmentos únicos (e.g., `(admin)/admin/`, `(auth)/login/`).
 - **Server Components usan `getTranslations` (async):** En pages, usar `getTranslations` de `next-intl/server` (no `useTranslations`). `useTranslations` es para Client Components.
+- **`Link` vs `useRouter`/`redirect` (locale duplicado):** `@/lib/i18n/navigation` antepone el locale automáticamente. `Link` siempre se importa de ahí (paths canónicos sin locale: `/registro`, `/servicios/...`). Pero los redirects post-auth (`useRouter().push`, `redirect()` server-side) reciben paths que YA tienen locale (`safeNext` devuelve `/{locale}/...`, callback handlers también), así que se importan de `next/navigation` — si no, queda `/es/es/...` y 404. Detalle en `docs/I18N.md` → "Navegación".
 
 ## Límites de tamaño
 
