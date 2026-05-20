@@ -2597,6 +2597,23 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      _materialize_next_occurrence: {
+        Args: { p_source_id: string }
+        Returns: string
+      }
+      cancel_order_and_decide: {
+        Args: {
+          p_actor_id: string
+          p_order_id: string
+          p_reason: string
+          p_scope: string
+        }
+        Returns: Json
+      }
+      complete_order_and_advance: {
+        Args: { p_actor_id: string; p_order_id: string }
+        Returns: Json
+      }
       compute_next_slot: {
         Args: {
           p_day_of_month: number
@@ -2608,6 +2625,36 @@ export type Database = {
           p_weekdays: number[]
         }
         Returns: string
+      }
+      create_order_with_series: {
+        Args: {
+          p_billing_override: Json
+          p_client_id: string
+          p_contact_email: string
+          p_contact_fiscal_id: string
+          p_contact_fiscal_id_type_id: string
+          p_contact_name: string
+          p_contact_phone: string
+          p_country_id: string
+          p_day_of_month: number
+          p_form_data: Json
+          p_frequency: string
+          p_hours_per_session: number
+          p_notes: string
+          p_repeat_every: number
+          p_service_address: string
+          p_service_city_id: string
+          p_service_id: string
+          p_service_postal_code: string
+          p_start_date: string
+          p_subtypes: Json
+          p_time_end: string
+          p_time_start: string
+          p_timezone: string
+          p_total_occurrences: number
+          p_weekdays: number[]
+        }
+        Returns: Json
       }
       delete_client: {
         Args: { p_client_id: string }
